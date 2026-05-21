@@ -2,6 +2,7 @@ import Usuario
 
 class Estudiante(Usuario):
     def __init__(self,
+                 id_usuario,
                  nombre,
                  email,
                  clave,
@@ -10,7 +11,7 @@ class Estudiante(Usuario):
                  ciclo_actual,
                  matriculado = True
                  ):
-        super().__init__(nombre,email,clave,tipo_usuario = "estudiante")
+        super().__init__(id_usuario,nombre,email,clave,tipo_usuario = "estudiante")
         self.cedula = cedula
         self.carrera = carrera
         self.ciclo_actual = ciclo_actual

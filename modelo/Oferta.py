@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-class oferta:
+class Oferta:
     def __init__(self,
                  id_empresa,
                  titulo,
