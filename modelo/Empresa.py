@@ -1,18 +1,19 @@
 import Usuario
-class Empresa(Usuario):
+class Empresa:
     def __init__(self,
-                 id_usuario,
-                 nombre,
-                 email,
-                 clave,
-                 ruc,
-                 razon_social,
-                 ubicacion,
-                 mision,
-                 vision,
-                 sector
+                 id_empresa: str,
+                 nombre_empresa: str,
+                 email: str,
+                 ruc: str,
+                 razon_social: str,
+                 ubicacion: str,
+                 mision: str,
+                 vision: str,
+                 sector: str,
                  ):
-        super().__init__(id_usuario,nombre,email,clave,tipo_usuario ="Empresa")
+        self.id_empresa = id_empresa
+        self.nombre_empresa = nombre_empresa
+        self.email = email
         self.ruc = ruc
         self.razon_social = razon_social
         self.ubicacion = ubicacion
@@ -20,4 +21,7 @@ class Empresa(Usuario):
         self.vision = vision
         self.sector = sector
         self.convenio_vigente = True
+
+    def editar_estado_convenio(self,estado: bool):
+        self.convenio_vigente = estado
 
