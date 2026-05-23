@@ -1,27 +1,32 @@
+"""Casos de uso para practicas, actividades y documentos."""
+
+from __future__ import annotations
+
 from datetime import date
 
-from configuracion.Ajustes import HORAS_MAXIMAS_PRACTICA, ROLES
+from configuracion.ajustes import HORAS_MAXIMAS_PRACTICA, ROLES
 from controlador.ControlNotificacion import ControlNotificacion
-from modelo.Actividad import Actividad
-from modelo.Documentos import Formulario, Documento
+from modelo.Documentos import Documento, Formulario
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
-from modelo.Practica import Practica
-from modelo.Usuario import Usuario, Estudiante
-from utilidades.Excepciones import ReglaNegocioError, ValidacionError, AutorizacionError
-from utilidades.IDGenerador import id_generador
+from modelo.Practica import Actividad, Practica
+from modelo.Usuario import Estudiante, Usuario
+from utilidades.Excepciones import AutorizacionError, ReglaNegocioError, ValidacionError
+from utilidades.IDgenerator import generar_id
 from utilidades.ManejoDatos import ManejoDatos
 
 
 class ControlPractica:
+    """Gestiona el ciclo de vida de una practica."""
+
     def crear_practica(
-            self,
-            id_postulacion: str,
-            fecha_inicio: date,
-            fecha_fin: date,
-            id_tutor_academico: str,
-            tutor_empresarial: str,
+        self,
+        id_postulacion: str,
+        fecha_inicio: date,
+        fecha_fin: date,
+        id_tutor_academico: str,
+        tutor_empresarial: str,
     ) -> Practica:
         postulacion = Postulacion.obtener_por_id(id_postulacion)
         if postulacion.estado != "aceptada":
@@ -43,7 +48,7 @@ class ControlPractica:
         empresa = Empresa.obtener_por_id(oferta.id_empresa)
 
         practica = Practica(
-            id_practica=id_generador("PRA"),
+            id_practica=generar_id("PRA"),
             id_postulacion=id_postulacion,
             id_estudiante=postulacion.id_estudiante,
             id_empresa=oferta.id_empresa,
@@ -56,7 +61,7 @@ class ControlPractica:
 
         estudiante.asignar_practica_activa(practica.id_practica)
         estudiante.guardar()
-        self.registrar_formulario_inicial(practica, estudiante, empresa)
+        self._registrar_formulario_inicial(practica, estudiante, empresa)
         carta = self._generar_carta_compromiso_si_requiere(practica, empresa)
         self._notificar_practica_creada(practica, estudiante, empresa)
         if carta is not None:
@@ -74,7 +79,7 @@ class ControlPractica:
         self._validar_horas_actividad(id_practica, horas)
 
         actividad = Actividad(
-            id_actividad=id_generador("ACT"),
+            id_actividad=generar_id("ACT"),
             id_practica=id_practica,
             descripcion=descripcion,
             horas=horas,
@@ -117,11 +122,11 @@ class ControlPractica:
         return actividad
 
     def cambiar_aprobacion_actividad(
-            self,
-            id_actividad: str,
-            aprobada: bool,
-            id_tutor_academico: str | None = None,
-            es_admin: bool = False,
+        self,
+        id_actividad: str,
+        aprobada: bool,
+        id_tutor_academico: str | None = None,
+        es_admin: bool = False,
     ) -> Actividad:
         actividad = Actividad.obtener_por_id(id_actividad)
         practica = Practica.obtener_por_id(actividad.id_practica)
@@ -140,11 +145,11 @@ class ControlPractica:
         return actividad
 
     def cambiar_completado_actividad(
-            self,
-            id_actividad: str,
-            completada: bool,
-            tutor_empresarial: str | None = None,
-            es_admin: bool = False,
+        self,
+        id_actividad: str,
+        completada: bool,
+        tutor_empresarial: str | None = None,
+        es_admin: bool = False,
     ) -> Actividad:
         actividad = Actividad.obtener_por_id(id_actividad)
         practica = Practica.obtener_por_id(actividad.id_practica)
@@ -170,12 +175,12 @@ class ControlPractica:
         return actividad
 
     def editar_actividad(
-            self,
-            id_actividad: str,
-            descripcion: str | None = None,
-            horas: int | None = None,
-            tutor_empresarial: str | None = None,
-            es_admin: bool = False,
+        self,
+        id_actividad: str,
+        descripcion: str | None = None,
+        horas: int | None = None,
+        tutor_empresarial: str | None = None,
+        es_admin: bool = False,
     ) -> Actividad:
         actividad = Actividad.obtener_por_id(id_actividad)
         practica = Practica.obtener_por_id(actividad.id_practica)
@@ -202,10 +207,10 @@ class ControlPractica:
         return actividad
 
     def eliminar_actividad(
-            self,
-            id_actividad: str,
-            tutor_empresarial: str | None = None,
-            es_admin: bool = False,
+        self,
+        id_actividad: str,
+        tutor_empresarial: str | None = None,
+        es_admin: bool = False,
     ) -> None:
         actividad = Actividad.obtener_por_id(id_actividad)
         practica = Practica.obtener_por_id(actividad.id_practica)
@@ -214,7 +219,7 @@ class ControlPractica:
 
         actividades = {
             actividad_existente.id_actividad: actividad_existente
-            for actividad_existente in Actividad.cargar_todo()
+            for actividad_existente in Actividad.cargar_todos()
         }
         actividades.pop(id_actividad, None)
         ManejoDatos("actividades").guardar(actividades, "id_actividad")
@@ -236,16 +241,16 @@ class ControlPractica:
         return practica
 
     def registrar_formulario(
-            self,
-            id_practica: str,
-            tipo: str,
-            observaciones: str = "",
-            contenido: str = "",
-            calificacion: int | None = None,
+        self,
+        id_practica: str,
+        tipo: str,
+        observaciones: str = "",
+        contenido: str = "",
+        calificacion: int | None = None,
     ) -> Formulario:
         Practica.obtener_por_id(id_practica)
         formulario = Formulario(
-            id_formulario=id_generador("FOR"),
+            id_formulario=generar_id("FOR"),
             id_practica=id_practica,
             tipo=tipo,
             fecha_registro=date.today(),
@@ -259,7 +264,7 @@ class ControlPractica:
     def emitir_documento(self, id_practica: str, tipo: str, gestionado_por: str) -> Documento:
         Practica.obtener_por_id(id_practica)
         documento = Documento(
-            id_documento=id_generador("DOC"),
+            id_documento=generar_id("DOC"),
             id_practica=id_practica,
             tipo=tipo,
             gestionado_por=gestionado_por,
@@ -269,9 +274,9 @@ class ControlPractica:
         return documento
 
     def _generar_carta_compromiso_si_requiere(
-            self,
-            practica: Practica,
-            empresa: Empresa,
+        self,
+        practica: Practica,
+        empresa: Empresa,
     ) -> Documento | None:
         """RN-16: si la empresa no tiene convenio, se genera carta compromiso."""
 
@@ -285,7 +290,7 @@ class ControlPractica:
         )
 
     def listar_practicas(self) -> list[Practica]:
-        return Practica.cargar_todo()
+        return Practica.cargar_todos()
 
     def listar_practicas_por_tutor_academico(self, id_tutor_academico: str) -> list[Practica]:
         return ManejoDatos("practicas").filtrar(id_tutor_academico=id_tutor_academico)
@@ -294,10 +299,10 @@ class ControlPractica:
         return ManejoDatos("practicas").filtrar(tutor_empresarial=id_tutor_empresarial)
 
     def calificar_practica(
-            self,
-            id_practica: str,
-            calificacion: int,
-            id_tutor_academico: str,
+        self,
+        id_practica: str,
+        calificacion: int,
+        id_tutor_academico: str,
     ) -> Practica:
         practica = Practica.obtener_por_id(id_practica)
         if practica.id_tutor_academico != id_tutor_academico:
@@ -318,7 +323,7 @@ class ControlPractica:
         ids_practicas = {practica.id_practica for practica in practicas}
         return [
             formulario
-            for formulario in Formulario.cargar_todo()
+            for formulario in Formulario.cargar_todos()
             if formulario.id_practica in ids_practicas
         ]
 
@@ -339,6 +344,8 @@ class ControlPractica:
         return practicas[0] if practicas else None
 
     def obtener_progreso_estudiante(self, id_estudiante: str) -> dict[str, object]:
+        """Obtiene el progreso y actividades de la practica activa del estudiante."""
+
         practica = self.obtener_practica_activa_estudiante(id_estudiante)
         if practica is None:
             return {
@@ -396,7 +403,7 @@ class ControlPractica:
 
     def listar_actividades(self, id_practica: str | None = None) -> list[Actividad]:
         if id_practica is None:
-            return Actividad.cargar_todo()
+            return Actividad.cargar_todos()
         return ManejoDatos("actividades").filtrar(id_practica=id_practica)
 
     def obtener_horas_registradas(self, id_practica: str) -> int:
@@ -406,10 +413,10 @@ class ControlPractica:
         return HORAS_MAXIMAS_PRACTICA - self.obtener_horas_registradas(id_practica)
 
     def _validar_horas_actividad(
-            self,
-            id_practica: str,
-            horas: int,
-            id_actividad_excluida: str | None = None,
+        self,
+        id_practica: str,
+        horas: int,
+        id_actividad_excluida: str | None = None,
     ) -> None:
         horas_registradas = 0
         for actividad in self.listar_actividades(id_practica):
@@ -475,7 +482,7 @@ class ControlPractica:
             validar_usuario=tutor_empresarial is not None,
         )
 
-        for usuario in Usuario.cargar_todo():
+        for usuario in Usuario.cargar_todos():
             if usuario.rol == ROLES["COORDINADOR"]:
                 notificaciones.crear_notificacion(
                     usuario.id_usuario,
@@ -485,10 +492,10 @@ class ControlPractica:
                 )
 
     def _notificar_practica_creada(
-            self,
-            practica: Practica,
-            estudiante: Estudiante,
-            empresa: Empresa,
+        self,
+        practica: Practica,
+        estudiante: Estudiante,
+        empresa: Empresa,
     ) -> None:
         notificaciones = ControlNotificacion()
         mensaje = (
@@ -520,7 +527,7 @@ class ControlPractica:
                 "practica",
             )
 
-        for usuario in Usuario.cargar_todo():
+        for usuario in Usuario.cargar_todos():
             if usuario.rol == ROLES["COORDINADOR"]:
                 notificaciones.crear_notificacion(
                     usuario.id_usuario,
@@ -529,11 +536,11 @@ class ControlPractica:
                     "practica",
                 )
 
-    def registrar_formulario_inicial(
-            self,
-            practica: Practica,
-            estudiante: Estudiante,
-            empresa: Empresa,
+    def _registrar_formulario_inicial(
+        self,
+        practica: Practica,
+        estudiante: Estudiante,
+        empresa: Empresa,
     ) -> Formulario:
         tutor_academico = Usuario.buscar_por_id(practica.id_tutor_academico)
         tutor_empresarial = Usuario.buscar_por_id(practica.tutor_empresarial)
@@ -637,10 +644,10 @@ class ControlPractica:
         )
 
     def _notificar_carta_compromiso(
-            self,
-            practica: Practica,
-            estudiante: Estudiante,
-            empresa: Empresa,
+        self,
+        practica: Practica,
+        estudiante: Estudiante,
+        empresa: Empresa,
     ) -> None:
         ControlNotificacion().crear_notificacion(
             estudiante.id_usuario,
@@ -653,7 +660,7 @@ class ControlPractica:
         )
 
     def _obtener_nombre_coordinador(self) -> str:
-        for usuario in Usuario.cargar_todo():
+        for usuario in Usuario.cargar_todos():
             if usuario.rol == ROLES["COORDINADOR"]:
                 return usuario.nombre
         return "Coordinador no registrado"

@@ -1,11 +1,15 @@
-from dataclasses import field, dataclass
 
-from typing import ClassVar, TypeVar, Optional, Any
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any, ClassVar, Optional, TypeVar
 
 from utilidades.Excepciones import EntidadNoEncontradaError
 from utilidades.ManejoDatos import ManejoDatos
 
+
 T = TypeVar("T", bound="BasePersistente")
+
 
 @dataclass
 class BasePersistente:
@@ -18,7 +22,7 @@ class BasePersistente:
         ManejoDatos(self.archivo).actualizar(self, self.campo_id)
 
     @classmethod
-    def cargar_todo(cls: type[T]) -> list[T]:
+    def cargar_todos(cls: type[T]) -> list[T]:
         return ManejoDatos(cls.archivo).cargar()
 
     @classmethod

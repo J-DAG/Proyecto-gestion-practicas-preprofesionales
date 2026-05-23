@@ -1,15 +1,19 @@
-from controlador.ControlAdministrador import ControlAdministrador
+"""Vista de consola para administradores."""
+
+from __future__ import annotations
+
+from controlador.ControlAdministrador import ConrolAdministrador
 from controlador.ControlOferta import ControlOferta
 from controlador.ControlUsuario import ControlUsuario
 from modelo.Usuario import Administrador
 from utilidades.Excepciones import SistemaPracticasError
-from vista.Validaciones import leer_texto, leer_entero, leer_bool, pausar, imprimir_tabla
+from vista.ValidacionDatos import imprimir_tabla, leer_bool, leer_entero, leer_texto, pausar
 
 
 class VistaAdministrador:
     def __init__(self, usuario: Administrador) -> None:
         self.usuario = usuario
-        self.admin = ControlAdministrador()
+        self.admin = ConrolAdministrador()
         self.ofertas = ControlOferta()
         self.usuarios = ControlUsuario()
 

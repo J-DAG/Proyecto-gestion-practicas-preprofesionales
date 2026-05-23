@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import ClassVar
 
-from modelo.BasePersistencia import BasePersistente
+from modelo.BasePersistente import BasePersistente
 
 @dataclass
 class Empresa(BasePersistente):
@@ -21,16 +23,16 @@ class Empresa(BasePersistente):
 
     def __post_init__(self) -> None:
         self.id = self.id_empresa
-        self.migrar_campos_legacy()
+        self._migrar_campos_legacy()
 
     def __setstate__(self, estado: dict[str, object]) -> None:
         self.__dict__.update(estado)
-        self.migrar_campos_legacy()
+        self._migrar_campos_legacy()
 
     def editar_estado_convenio(self, estado: bool) -> None:
         self.convenio_vigente = estado
 
-    def migrar_campos_legacy(self) -> None:
+    def _migrar_campos_legacy(self) -> None:
         if hasattr(self, "tiene_convenio"):
             self.convenio_vigente = bool(getattr(self, "tiene_convenio"))
             delattr(self, "tiene_convenio")

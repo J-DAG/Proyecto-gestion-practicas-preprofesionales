@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from datetime import date, timedelta
 
-from configuracion.Ajustes import ARCHIVO_DATOS
+from configuracion.ajustes import ARCHIVO_DATOS
 from controlador.ControlOferta import ControlOferta
 from controlador.ControlUsuario import ControlUsuario
 from modelo.Usuario import Usuario
@@ -8,8 +10,6 @@ from utilidades.ManejoDatos import ManejoDatos
 
 
 def inicializar_archivos_dat() -> None:
-    """Crea todos los archivos .dat requeridos si no existen."""
-
     for ruta in ARCHIVO_DATOS.values():
         ruta.parent.mkdir(parents=True, exist_ok=True)
         if not ruta.exists():
@@ -17,10 +17,8 @@ def inicializar_archivos_dat() -> None:
 
 
 def sembrar_datos_prueba() -> None:
-    """Crea usuarios, empresa y oferta iniciales cuando el sistema esta vacio."""
-
     inicializar_archivos_dat()
-    if Usuario.cargar_todo():
+    if Usuario.cargar_todos():
         return
 
     usuarios = ControlUsuario()
@@ -70,9 +68,7 @@ def sembrar_datos_prueba() -> None:
         "Desarrollo de software",
         3,
         date.today() + timedelta(days=30),
-        )
-
-    # Tocar explicitamente archivos administrativos aun si no tienen datos semilla.
+    )
     for nombre in [
         "postulaciones",
         "practicas",

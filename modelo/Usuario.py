@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import hashlib
-import uuid
 from dataclasses import dataclass
 from typing import ClassVar
 
-from configuracion.Ajustes import ROLES
-from modelo.BasePersistencia import BasePersistente
+from configuracion.ajustes import ROLES
+from modelo.BasePersistente import BasePersistente
 
 
 @dataclass

@@ -1,5 +1,5 @@
-from utilidades.IniciarDatos import sembrar_datos_prueba
-from vista.MainMenu import MainMenu
+from utilidades.seed import sembrar_datos_prueba
+from vista.main_menu import MainMenu
 
 
 def main() -> None:

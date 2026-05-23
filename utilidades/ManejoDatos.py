@@ -1,13 +1,24 @@
+
+from __future__ import annotations
+
 import pickle
 from pathlib import Path
-from typing import TypeVar, Optional, Any, Callable
+from typing import Any, Callable, Optional, TypeVar
 
-from configuracion.Ajustes import ARCHIVO_DATOS, DATOS_DIR
-from utilidades.Excepciones import PermisoArchivoError, PersistenciaError, FormatoDatosInvalidoError, \
-    ArchivoDatosCorruptoError
+from configuracion.ajustes import DATOS_DIR, ARCHIVO_DATOS
+from utilidades.Excepciones import (
+    ArchivoDatosCorruptoError,
+    FormatoDatosInvalidoError,
+    PermisoArchivoError,
+    PersistenciaError,
+)
+
 
 T = TypeVar("T")
+
+
 class ManejoDatos:
+
     def __init__(self, archivo: str | Path) -> None:
         self.ruta = ARCHIVO_DATOS.get(str(archivo), Path(archivo))
         self.asegurar_directorio()
@@ -41,6 +52,8 @@ class ManejoDatos:
         self.guardar(datos, campo_id)
 
     def buscar_por_id(self, identificador: str, campo_id: str = "id") -> Optional[T]:
+        """Busca directamente por llave del diccionario persistido."""
+
         datos = self.cargar_diccionario(campo_id)
         entidad = datos.get(str(identificador))
         if entidad is not None:
@@ -65,7 +78,7 @@ class ManejoDatos:
             if all(getattr(entidad, campo, None) == valor for campo, valor in campos.items())
         ]
 
-    def _leer_archivo(self) -> object:
+    def leer_archivo(self) -> object:
         try:
             if not self.ruta.exists():
                 self.ruta.touch()
@@ -93,12 +106,12 @@ class ManejoDatos:
             ) from error
 
     def cargar_diccionario(self, campo_id: str = "id") -> dict[str, T]:
-        return self.normalizar_diccionario(self._leer_archivo(), campo_id)
+        return self.normalizar_diccionario(self.leer_archivo(), campo_id)
 
     def normalizar_diccionario(
-            self,
-            datos: object,
-            campo_id: str = "id",
+        self,
+        datos: object,
+        campo_id: str = "id",
     ) -> dict[str, T]:
         if isinstance(datos, dict):
             return {str(clave): valor for clave, valor in datos.items()}
@@ -124,8 +137,6 @@ class ManejoDatos:
         return datos_indexados
 
     def asegurar_directorio(self) -> None:
-        """Garantiza que el directorio de datos exista."""
-
         try:
             DATOS_DIR.mkdir(parents=True, exist_ok=True)
             self.ruta.parent.mkdir(parents=True, exist_ok=True)

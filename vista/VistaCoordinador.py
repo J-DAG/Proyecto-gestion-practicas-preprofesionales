@@ -1,12 +1,23 @@
-from configuracion.Ajustes import ROLES
+"""Vista de consola para coordinadores."""
+
+from __future__ import annotations
+
 from controlador.ControlOferta import ControlOferta
 from controlador.ControlPostulacion import ControlPostulacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
-from modelo.Usuario import Coordinador, Usuario, Estudiante
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError, ReglaNegocioError
-from vista.Validaciones import leer_texto, leer_bool, pausar, leer_entero, leer_fecha, imprimir_tabla
+from configuracion.ajustes import ROLES
+from modelo.Usuario import Coordinador, Estudiante, Usuario
+from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError, ValidacionError
+from vista.ValidacionDatos import (
+    imprimir_tabla,
+    leer_bool,
+    leer_entero,
+    leer_fecha,
+    leer_texto,
+    pausar,
+)
 
 
 class VistaCoordinador:
@@ -173,11 +184,11 @@ class VistaCoordinador:
         pausar()
 
     def _validar_datos_practica(
-            self,
-            fecha_inicio,
-            fecha_fin,
-            id_tutor_academico: str,
-            id_tutor_empresarial: str,
+        self,
+        fecha_inicio,
+        fecha_fin,
+        id_tutor_academico: str,
+        id_tutor_empresarial: str,
     ) -> None:
         if fecha_fin < fecha_inicio:
             raise ValidacionError("La fecha de fin no puede ser anterior a la fecha de inicio.")
@@ -264,7 +275,7 @@ class VistaCoordinador:
             )
 
     def _mostrar_tutores(self) -> None:
-        usuarios = Usuario.cargar_todo()
+        usuarios = Usuario.cargar_todos()
         print("\nTutores academicos:")
         academicos = [u for u in usuarios if u.rol == ROLES["TUTOR_ACADEMICO"]]
         if not academicos:

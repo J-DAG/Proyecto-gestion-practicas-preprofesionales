@@ -1,9 +1,13 @@
+"""Vista de consola para tutores academicos."""
+
+from __future__ import annotations
+
 from controlador.ControlNotificacion import ControlNotificacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
-from modelo.Usuario import TutorAcademico, Usuario
+from modelo.Usuario import Estudiante, TutorAcademico, Usuario
 from utilidades.Excepciones import SistemaPracticasError
-from vista.Validaciones import leer_texto, pausar, leer_bool, leer_entero
+from vista.ValidacionDatos import leer_bool, leer_entero, leer_texto, pausar
 
 
 class VistaTutorAcademico:
@@ -187,4 +191,3 @@ class VistaTutorAcademico:
                 f"- {practica.id_practica} | {nombre_estudiante} | "
                 f"Horas: {practica.horas_cumplidas}/240 | Fin: {practica.fecha_fin}"
             )
-

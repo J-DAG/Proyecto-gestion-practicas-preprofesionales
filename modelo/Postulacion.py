@@ -1,11 +1,12 @@
-import uuid
+from __future__ import annotations
+
 from dataclasses import dataclass
-from datetime import datetime, date
+from datetime import date
 from typing import ClassVar
 
-from modelo.BasePersistencia import BasePersistente
+from modelo.BasePersistente import BasePersistente
 
-@dataclass
+
 @dataclass
 class Postulacion(BasePersistente):
     id_postulacion: str

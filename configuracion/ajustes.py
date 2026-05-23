@@ -1,8 +1,10 @@
 from pathlib import Path
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATOS_DIR = BASE_DIR / "datos"
 HORAS_MAXIMAS_PRACTICA = 240
+
 
 ARCHIVO_DATOS = {
     "usuarios": DATOS_DIR / "usuarios.dat",
@@ -15,7 +17,8 @@ ARCHIVO_DATOS = {
     "documentos": DATOS_DIR / "documentos.dat",
     "solicitudes": DATOS_DIR / "solicitudes.dat",
     "convenios": DATOS_DIR / "convenios.dat",
-    "notificaciones": DATOS_DIR / "notificaciones.dat",}
+    "notificaciones": DATOS_DIR / "notificaciones.dat",
+}
 
 ROLES = {
     "ADMINISTRADOR": "administrador",

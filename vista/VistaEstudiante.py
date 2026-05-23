@@ -1,10 +1,14 @@
+"""Vista de consola para estudiantes."""
+
+from __future__ import annotations
+
 from controlador.ControlNotificacion import ControlNotificacion
 from controlador.ControlOferta import ControlOferta
 from controlador.ControlPostulacion import ControlPostulacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Usuario import Estudiante
 from utilidades.Excepciones import SistemaPracticasError
-from vista.Validaciones import leer_texto, imprimir_tabla, pausar
+from vista.ValidacionDatos import imprimir_tabla, leer_texto, pausar
 
 
 class VistaEstudiante:

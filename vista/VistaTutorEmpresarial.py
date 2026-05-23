@@ -1,9 +1,13 @@
+"""Vista de consola para tutores empresariales."""
+
+from __future__ import annotations
+
 from controlador.ControlNotificacion import ControlNotificacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Usuario import TutorEmpresarial, Usuario
 from utilidades.Excepciones import SistemaPracticasError
-from vista.Validaciones import leer_texto, pausar, leer_entero, leer_bool
+from vista.ValidacionDatos import leer_bool, leer_entero, leer_texto, pausar
 
 
 class VistaTutorEmpresarial:

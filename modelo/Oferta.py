@@ -1,9 +1,11 @@
-import uuid
-from dataclasses import dataclass
-from datetime import datetime, date
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import date
 from typing import ClassVar
 
-from modelo.BasePersistencia import BasePersistente
+from modelo.BasePersistente import BasePersistente
+
 
 @dataclass
 class Oferta(BasePersistente):

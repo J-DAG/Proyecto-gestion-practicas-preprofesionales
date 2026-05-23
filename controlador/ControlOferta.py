@@ -1,24 +1,27 @@
+from __future__ import annotations
+
 from datetime import date
-from pathlib import Path
 
 from modelo.Empresa import Empresa
-from utilidades.Excepciones import ValidacionError, EntidadDuplicadaError
-from utilidades.IDGenerador import id_generador
-from utilidades.ManejoDatos import ManejoDatos
 from modelo.Oferta import Oferta
+from utilidades.Excepciones import EntidadDuplicadaError, ReglaNegocioError, ValidacionError
+from utilidades.IDgenerator import generar_id
+from utilidades.ManejoDatos import ManejoDatos
+
 
 class ControlOferta:
+
     def registrar_empresa(
-            self,
-            nombre_empresa: str,
-            email: str,
-            razon_social: str,
-            ruc: str,
-            sector: str,
-            ubicacion: str,
-            mision: str,
-            vision: str,
-            convenio_vigente: bool,
+        self,
+        nombre_empresa: str,
+        email: str,
+        razon_social: str,
+        ruc: str,
+        sector: str,
+        ubicacion: str,
+        mision: str,
+        vision: str,
+        convenio_vigente: bool,
     ) -> Empresa:
         if not nombre_empresa.strip():
             raise ValidacionError("El nombre de la empresa es obligatorio.")
@@ -30,7 +33,7 @@ class ControlOferta:
             raise EntidadDuplicadaError(f"Ya existe una empresa con RUC {ruc}.")
 
         empresa = Empresa(
-            id_empresa=id_generador("EMP"),
+            id_empresa=generar_id("EMP"),
             nombre_empresa=nombre_empresa,
             email=email,
             razon_social=razon_social,
@@ -51,14 +54,14 @@ class ControlOferta:
         return empresa
 
     def crear_oferta(
-            self,
-            id_empresa: str,
-            titulo: str,
-            descripcion: str,
-            requisitos: str,
-            area: str,
-            cupos: int,
-            fecha_cierre: date,
+        self,
+        id_empresa: str,
+        titulo: str,
+        descripcion: str,
+        requisitos: str,
+        area: str,
+        cupos: int,
+        fecha_cierre: date,
     ) -> Oferta:
         Empresa.obtener_por_id(id_empresa)
         if cupos <= 0:
@@ -67,7 +70,7 @@ class ControlOferta:
             raise ValidacionError("La fecha de cierre no puede estar vencida.")
 
         oferta = Oferta(
-            id_oferta=id_generador("OFE"),
+            id_oferta=generar_id("OFE"),
             id_empresa=id_empresa,
             titulo=titulo,
             descripcion=descripcion,
@@ -81,10 +84,10 @@ class ControlOferta:
         return oferta
 
     def listar_empresas(self) -> list[Empresa]:
-        return Empresa.cargar_todo()
+        return Empresa.cargar_todos()
 
     def listar_ofertas(self, solo_disponibles: bool = False) -> list[Oferta]:
-        ofertas = Oferta.cargar_todo()
+        ofertas = Oferta.cargar_todos()
         if solo_disponibles:
             return [oferta for oferta in ofertas if oferta.esta_disponible()]
         return ofertas

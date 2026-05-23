@@ -1,13 +1,23 @@
-from configuracion.Ajustes import ROLES
+"""Menu principal de la aplicacion."""
+
+from __future__ import annotations
+
+from configuracion.ajustes import ROLES
 from controlador.ControlUsuario import ControlUsuario
-from modelo.Usuario import Administrador, Coordinador, Estudiante, TutorAcademico, TutorEmpresarial
+from modelo.Usuario import (
+    Administrador,
+    Coordinador,
+    Estudiante,
+    TutorAcademico,
+    TutorEmpresarial,
+)
 from utilidades.Excepciones import SistemaPracticasError
-from vista.Validaciones import leer_texto, pausar
 from vista.VistaAdministrador import VistaAdministrador
 from vista.VistaCoordinador import VistaCoordinador
 from vista.VistaEstudiante import VistaEstudiante
 from vista.VistaTutorAcademico import VistaTutorAcademico
 from vista.VistaTutorEmpresarial import VistaTutorEmpresarial
+from vista.ValidacionDatos import leer_texto, pausar
 
 
 class MainMenu:
@@ -40,13 +50,13 @@ class MainMenu:
             elif isinstance(usuario, Estudiante) or usuario.rol == ROLES["ESTUDIANTE"]:
                 VistaEstudiante(usuario).mostrar()
             elif (
-                    isinstance(usuario, TutorAcademico)
-                    or usuario.rol == ROLES["TUTOR_ACADEMICO"]
+                isinstance(usuario, TutorAcademico)
+                or usuario.rol == ROLES["TUTOR_ACADEMICO"]
             ):
                 VistaTutorAcademico(usuario).mostrar()
             elif (
-                    isinstance(usuario, TutorEmpresarial)
-                    or usuario.rol == ROLES["TUTOR_EMPRESARIAL"]
+                isinstance(usuario, TutorEmpresarial)
+                or usuario.rol == ROLES["TUTOR_EMPRESARIAL"]
             ):
                 VistaTutorEmpresarial(usuario).mostrar()
             else:

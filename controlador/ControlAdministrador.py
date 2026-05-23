@@ -1,14 +1,14 @@
-from modelo.Actividad import Actividad
+from __future__ import annotations
+
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
-from modelo.Practica import Practica
+from modelo.Practica import Actividad, Practica
 from modelo.Usuario import Usuario
 from utilidades.ManejoDatos import ManejoDatos
 
 
-class ControlAdministrador:
-
+class ConrolAdministrador:
     def listar_entidades(self, nombre_archivo: str) -> list[object]:
         return ManejoDatos(nombre_archivo).cargar()
 
@@ -19,20 +19,18 @@ class ControlAdministrador:
         return usuario
 
     def generar_reportes(self) -> dict[str, int]:
-        practicas = Practica.cargar_todo()
+        practicas = Practica.cargar_todos()
         return {
-            "usuarios": len(Usuario.cargar_todo()),
-            "empresas": len(Empresa.cargar_todo()),
-            "ofertas": len(Oferta.cargar_todo()),
-            "postulaciones": len(Postulacion.cargar_todo()),
+            "usuarios": len(Usuario.cargar_todos()),
+            "empresas": len(Empresa.cargar_todos()),
+            "ofertas": len(Oferta.cargar_todos()),
+            "postulaciones": len(Postulacion.cargar_todos()),
             "practicas_activas": len([p for p in practicas if p.estado == "activa"]),
             "practicas_finalizadas": len([p for p in practicas if p.estado == "finalizada"]),
-            "actividades": len(Actividad.cargar_todo()),
+            "actividades": len(Actividad.cargar_todos()),
         }
 
     def mantenimiento_general(self) -> dict[str, int]:
-        """Retorna conteos por archivo sin modificar datos."""
-
         archivos = [
             "usuarios",
             "empresas",
