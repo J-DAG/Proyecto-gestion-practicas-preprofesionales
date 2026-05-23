@@ -1,6 +1,6 @@
 import pickle
 from pathlib import Path
-from typing import TypeVar
+from typing import TypeVar, Optional, Any, Callable
 
 from configuracion.Ajustes import ARCHIVO_DATOS, DATOS_DIR
 from utilidades.Excepciones import PermisoArchivoError, PersistenciaError, FormatoDatosInvalidoError, \
@@ -8,16 +8,64 @@ from utilidades.Excepciones import PermisoArchivoError, PersistenciaError, Forma
 
 T = TypeVar("T")
 class ManejoDatos:
-    def __init__(self,archivo:str | Path):
-        self.ruta = ARCHIVO_DATOS.get(str(archivo),Path(archivo))
+    def __init__(self, archivo: str | Path) -> None:
+        self.ruta = ARCHIVO_DATOS.get(str(archivo), Path(archivo))
         self.asegurar_directorio()
-    def cargar(self)->list[T]:
+
+    def cargar(self) -> list[T]:
         return list(self.cargar_diccionario().values())
 
-    def cargar_diccionario(self,campo_id: str = "id")-> dict[str, T]:
-        return self.normalizar_diccionario(self.leer_archivo(),campo_id)
+    def guardar(self, datos: dict[str, T] | list[T], campo_id: str = "id") -> None:
+        self.asegurar_directorio()
+        datos_indexados = self.normalizar_diccionario(datos, campo_id)
+        try:
+            with self.ruta.open("wb") as archivo:
+                pickle.dump(datos_indexados, archivo)
+        except PermissionError as error:
+            raise PermisoArchivoError(
+                f"No tiene permisos para escribir en '{self.ruta}'."
+            ) from error
+        except OSError as error:
+            raise PersistenciaError(
+                f"No se pudo guardar el archivo '{self.ruta}': {error}"
+            ) from error
+        except pickle.PickleError as error:
+            raise PersistenciaError(
+                f"No se pudo serializar la informacion en '{self.ruta}'."
+            ) from error
 
-    def leer_archivo(self) -> object:
+    def actualizar(self, entidad: T, campo_id: str = "id") -> None:
+        datos = self.cargar_diccionario(campo_id)
+        valor_id = str(getattr(entidad, campo_id))
+        datos[valor_id] = entidad
+        self.guardar(datos, campo_id)
+
+    def buscar_por_id(self, identificador: str, campo_id: str = "id") -> Optional[T]:
+        datos = self.cargar_diccionario(campo_id)
+        entidad = datos.get(str(identificador))
+        if entidad is not None:
+            return entidad
+
+        return self.buscar_por_campo(campo_id, identificador)
+
+    def buscar_por_campo(self, campo: str, valor: Any) -> Optional[T]:
+        for entidad in self.cargar():
+            if getattr(entidad, campo, None) == valor:
+                return entidad
+        return None
+
+    def filtrar(self, criterio: Callable[[T], bool] | None = None, **campos: Any) -> list[T]:
+        datos = self.cargar()
+        if criterio is not None:
+            return [entidad for entidad in datos if criterio(entidad)]
+
+        return [
+            entidad
+            for entidad in datos
+            if all(getattr(entidad, campo, None) == valor for campo, valor in campos.items())
+        ]
+
+    def _leer_archivo(self) -> object:
         try:
             if not self.ruta.exists():
                 self.ruta.touch()
@@ -44,10 +92,14 @@ class ManejoDatos:
                 f"No se pudo leer el archivo '{self.ruta}': {error}"
             ) from error
 
-    def normalizar_diccionario(self,
-                               datos: object,
-                               campo_id: str = "id",
-                               ) -> dict[str, T]:
+    def cargar_diccionario(self, campo_id: str = "id") -> dict[str, T]:
+        return self.normalizar_diccionario(self._leer_archivo(), campo_id)
+
+    def normalizar_diccionario(
+            self,
+            datos: object,
+            campo_id: str = "id",
+    ) -> dict[str, T]:
         if isinstance(datos, dict):
             return {str(clave): valor for clave, valor in datos.items()}
 
@@ -71,34 +123,17 @@ class ManejoDatos:
 
         return datos_indexados
 
-    def asegurar_directorio(self)-> None:
+    def asegurar_directorio(self) -> None:
+        """Garantiza que el directorio de datos exista."""
+
         try:
-            DATOS_DIR.mkdir(parents=True,exist_ok=True)
-            self.ruta.parent.mkdir(parents=True,exist_ok=True)
+            DATOS_DIR.mkdir(parents=True, exist_ok=True)
+            self.ruta.parent.mkdir(parents=True, exist_ok=True)
         except PermissionError as error:
             raise PermisoArchivoError(
-                f"No se pudo crear el directorio '{self.ruta.parent}"
+                f"No tiene permisos para crear el directorio '{self.ruta.parent}'."
             ) from error
         except OSError as error:
             raise PersistenciaError(
-                f"No se pudo iniciar el directorio '{self.ruta.parent}': {error}"
+                f"No se pudo preparar el directorio '{self.ruta.parent}': {error}"
             ) from error
-
-    @staticmethod
-    def guardar_datos(ruta: Path,datos):
-        try:
-            ruta.parent.mkdir(parents=True, exist_ok=True)
-            with open(ruta, 'wb') as archivo:
-                pickle.dump(datos, archivo)
-        except Exception as e:
-            raise RuntimeError(f'Error al guardar el archivo: {e}')
-
-    @staticmethod
-    def actualizar_datos(ruta: Path,objeto,atributo_id: str):
-        registros = ManejoDatos.cargar_datos(ruta)
-        registros = [
-            r for r in registros
-            if getattr(r, atributo_id) != getattr(objeto, atributo_id)
-        ]
-        registros.append(objeto)
-        ManejoDatos.guardar_datos(ruta,registros)

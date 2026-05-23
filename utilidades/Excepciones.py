@@ -1,6 +1,5 @@
 
 class SistemaPracticasError(Exception):
-    """Error base de toda la aplicacion."""
     codigo = "SISTEMA_ERROR"
     mensaje_default = "Ocurrio un error en el sistema."
 
@@ -10,7 +9,6 @@ class SistemaPracticasError(Exception):
 
     def __str__(self) -> str:
         return f"[{self.codigo}] {self.mensaje}"
-
 
 class ValidacionError(SistemaPracticasError):
     codigo = "VALIDACION_ERROR"

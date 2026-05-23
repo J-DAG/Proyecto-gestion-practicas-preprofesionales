@@ -1,13 +1,33 @@
 import uuid
-from datetime import datetime
+from dataclasses import dataclass
+from datetime import datetime, date
+from typing import ClassVar
 
-class Postulacion:
-    def __init__(self,
-                 id_estudiante,
-                 id_oferta
-                 ):
-        self.id_postulacion = str(uuid.uuid4())
-        self.id_estudiante = id_estudiante
-        self.id_oferta = id_oferta
-        self.fecha_postulacion = datetime.now()
-        self.estado = 'pendiente'
+from modelo.BasePersistencia import BasePersistente
+
+@dataclass
+@dataclass
+class Postulacion(BasePersistente):
+    id_postulacion: str
+    id_estudiante: str
+    id_oferta: str
+    fecha_postulacion: date
+    estado: str = "pendiente"
+
+    archivo: ClassVar[str] = "postulaciones"
+    campo_id: ClassVar[str] = "id_postulacion"
+
+    def __post_init__(self) -> None:
+        self.id = self.id_postulacion
+
+    def validar(self) -> None:
+        self.estado = "validada"
+
+    def aceptar(self) -> None:
+        self.estado = "aceptada"
+
+    def rechazar(self) -> None:
+        self.estado = "rechazada"
+
+    def marcar_en_terna(self) -> None:
+        self.estado = "en_terna"

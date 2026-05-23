@@ -1,22 +1,28 @@
 import uuid
-from datetime import datetime
+from dataclasses import dataclass
+from datetime import datetime, date
+from typing import ClassVar
 
-class Oferta:
-    def __init__(self,
-                 id_empresa,
-                 titulo,
-                 descripcion,
-                 requisitos,
-                 carreras_objetivo,
-                 cupos
-                 ):
-        self.id_oferfa = str(uuid.uuid4())
-        self.id_empresa = id_empresa
-        self.titulo = titulo
-        self.descripcion = descripcion
-        self.requisitos = requisitos
-        self.cupos = cupos
-        self.fecha_publicacion = datetime.now()
-        self.fecha_cierre = None
-        self.estado = 'activa'
+from modelo.BasePersistencia import BasePersistente
 
+@dataclass
+class Oferta(BasePersistente):
+    id_oferta: str
+    id_empresa: str
+    titulo: str
+    descripcion: str
+    requisitos: str
+    area: str
+    cupos: int
+    fecha_publicacion: date
+    fecha_cierre: date
+    estado: str = "abierta"
+
+    archivo: ClassVar[str] = "ofertas"
+    campo_id: ClassVar[str] = "id_oferta"
+
+    def __post_init__(self) -> None:
+        self.id = self.id_oferta
+
+    def esta_disponible(self) -> bool:
+        return self.estado == "abierta" and self.cupos > 0 and self.fecha_cierre >= date.today()
