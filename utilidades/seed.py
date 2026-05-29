@@ -29,18 +29,21 @@ def sembrar_datos_prueba() -> None:
     usuarios.registrar_administrador(
         "Admin",
         "General",
+        "1300000000",
         "admin@uleam.edu.ec",
         "admin123",
     )
     usuarios.registrar_coordinador(
         "Coord",
         "Practicas",
+        "1300000001",
         "coord@uleam.edu.ec",
         "coord123",
     )
     usuarios.registrar_tutor_academico(
         "Tutor",
         "Academico",
+        "1300000002",
         "tutor.academico@uleam.edu.ec",
         "tutor123",
         "Software",
@@ -48,9 +51,9 @@ def sembrar_datos_prueba() -> None:
     usuarios.registrar_estudiante(
         "Ana",
         "Estudiante",
+        "1310000001",
         "ana@uleam.edu.ec",
         "ana123",
-        "1310000001",
         "Software",
         7,
         True,
@@ -70,6 +73,7 @@ def sembrar_datos_prueba() -> None:
     usuarios.registrar_tutor_empresarial(
         "Tutor",
         "Empresarial",
+        "1300000003",
         "tutor.empresarial@techandina.com",
         "tutor123",
         empresa.id_empresa,

@@ -54,9 +54,9 @@ class VistaAdministrador:
             estudiante = self.usuarios.registrar_estudiante(
                 leer_texto("Nombres: "),
                 leer_texto("Apellidos: "),
+                leer_texto("Cedula: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
-                leer_texto("Cedula: "),
                 leer_texto("Carrera: "),
                 leer_entero("Ciclo actual: "),
                 leer_bool("Matriculado"),
@@ -71,6 +71,7 @@ class VistaAdministrador:
             coordinador = self.usuarios.registrar_coordinador(
                 leer_texto("Nombres: "),
                 leer_texto("Apellidos: "),
+                leer_texto("Cedula: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
             )
@@ -84,6 +85,7 @@ class VistaAdministrador:
             administrador = self.usuarios.registrar_administrador(
                 leer_texto("Nombres: "),
                 leer_texto("Apellidos: "),
+                leer_texto("Cedula: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
             )
@@ -97,6 +99,7 @@ class VistaAdministrador:
             tutor = self.usuarios.registrar_tutor_academico(
                 leer_texto("Nombres: "),
                 leer_texto("Apellidos: "),
+                leer_texto("Cedula: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
                 leer_texto("Carrera: "),
@@ -112,6 +115,7 @@ class VistaAdministrador:
             tutor = self.usuarios.registrar_tutor_empresarial(
                 leer_texto("Nombres: "),
                 leer_texto("Apellidos: "),
+                leer_texto("Cedula: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
                 leer_texto("ID empresa: "),
@@ -165,5 +169,5 @@ class VistaAdministrador:
             estado = "activo" if usuario.activo else "inactivo"
             print(
                 f"- {usuario.id_usuario} | {usuario.nombre} | "
-                f"{usuario.email} | {usuario.rol} | {estado}"
+                f"Cedula: {usuario.cedula} | {usuario.email} | {usuario.rol} | {estado}"
             )

@@ -13,6 +13,7 @@ class Usuario(BasePersistente):
     id_usuario: str
     nombres: str
     apellidos: str
+    cedula: str
     email: str
     password: str
     rol: str
@@ -39,6 +40,8 @@ class Usuario(BasePersistente):
             self.nombres = str(self.__dict__.get("nombre", "")).strip()
         if "apellidos" not in self.__dict__:
             self.apellidos = ""
+        if "cedula" not in self.__dict__:
+            self.cedula = ""
 
     def encriptar_password(self, password: str) -> str:
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
@@ -52,7 +55,6 @@ class Usuario(BasePersistente):
 
 @dataclass
 class Estudiante(Usuario):
-    cedula: str = ""
     carrera: str = ""
     ciclo_actual: int = 1
     matriculado: bool = False

@@ -22,22 +22,22 @@ class ControlUsuario:
             self,
             nombres: str,
             apellidos: str,
+            cedula: str,
             email: str,
             password: str,
-            cedula: str,
             carrera: str,
             ciclo_actual: int,
             matriculado: bool,
     ) -> Estudiante:
-        self._validar_email_unico(email)
+        self._validar_datos_unicos(email, cedula)
         estudiante = Estudiante(
             id_usuario=generar_id("EST"),
             nombres=nombres,
             apellidos=apellidos,
+            cedula=cedula,
             email=email,
             password=password,
             rol=ROLES["ESTUDIANTE"],
-            cedula=cedula,
             carrera=carrera,
             ciclo_actual=ciclo_actual,
             matriculado=matriculado,
@@ -49,14 +49,16 @@ class ControlUsuario:
             self,
             nombres: str,
             apellidos: str,
+            cedula: str,
             email: str,
             password: str,
     ) -> Coordinador:
-        self._validar_email_unico(email)
+        self._validar_datos_unicos(email, cedula)
         coordinador = Coordinador(
             id_usuario=generar_id("COO"),
             nombres=nombres,
             apellidos=apellidos,
+            cedula=cedula,
             email=email,
             password=password,
             rol=ROLES["COORDINADOR"],
@@ -68,15 +70,17 @@ class ControlUsuario:
             self,
             nombres: str,
             apellidos: str,
+            cedula: str,
             email: str,
             password: str,
             carrera: str,
     ) -> TutorAcademico:
-        self._validar_email_unico(email)
+        self._validar_datos_unicos(email, cedula)
         tutor = TutorAcademico(
             id_usuario=generar_id("TAC"),
             nombres=nombres,
             apellidos=apellidos,
+            cedula=cedula,
             email=email,
             password=password,
             rol=ROLES["TUTOR_ACADEMICO"],
@@ -89,17 +93,19 @@ class ControlUsuario:
             self,
             nombres: str,
             apellidos: str,
+            cedula: str,
             email: str,
             password: str,
             id_empresa: str,
             cargo: str,
     ) -> TutorEmpresarial:
-        self._validar_email_unico(email)
+        self._validar_datos_unicos(email, cedula)
         Empresa.obtener_por_id(id_empresa)
         tutor = TutorEmpresarial(
             id_usuario=generar_id("TEM"),
             nombres=nombres,
             apellidos=apellidos,
+            cedula=cedula,
             email=email,
             password=password,
             rol=ROLES["TUTOR_EMPRESARIAL"],
@@ -113,14 +119,16 @@ class ControlUsuario:
             self,
             nombres: str,
             apellidos: str,
+            cedula: str,
             email: str,
             password: str,
     ) -> Administrador:
-        self._validar_email_unico(email)
+        self._validar_datos_unicos(email, cedula)
         administrador = Administrador(
             id_usuario=generar_id("ADM"),
             nombres=nombres,
             apellidos=apellidos,
+            cedula=cedula,
             email=email,
             password=password,
             rol=ROLES["ADMINISTRADOR"],
@@ -149,8 +157,12 @@ class ControlUsuario:
         usuario.guardar()
         return usuario
 
-    def _validar_email_unico(self, email: str) -> None:
+    def _validar_datos_unicos(self, email: str, cedula: str) -> None:
         if "@" not in email:
             raise ValidacionError("El email ingresado no tiene un formato valido.")
+        if not cedula.strip():
+            raise ValidacionError("La cedula es obligatoria.")
         if ManejoDatos("usuarios").buscar_por_campo("email", email):
             raise EntidadDuplicadaError(f"Ya existe un usuario con email {email}.")
+        if ManejoDatos("usuarios").buscar_por_campo("cedula", cedula):
+            raise EntidadDuplicadaError(f"Ya existe un usuario con cedula {cedula}.")

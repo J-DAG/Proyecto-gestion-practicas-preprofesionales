@@ -50,7 +50,7 @@ El sistema maneja cinco roles:
 - Tutor academico
 - Tutor empresarial
 
-Los usuarios guardan nombres y apellidos por separado. La propiedad `nombre` se mantiene como nombre completo para mostrar datos en pantalla y conservar compatibilidad con registros anteriores.
+Los usuarios guardan nombres, apellidos y cedula como datos generales. La propiedad `nombre` se mantiene como nombre completo para mostrar datos en pantalla y conservar compatibilidad con registros anteriores.
 
 ## Flujo Principal
 
@@ -69,6 +69,7 @@ Los usuarios guardan nombres y apellidos por separado. La propiedad `nombre` se 
 ## Reglas Implementadas
 
 - Solo estudiantes matriculados desde sexto ciclo pueden postular.
+- La cedula y el email de usuario deben ser unicos.
 - Un estudiante no puede postular si ya tiene practica activa.
 - Una oferta debe tener cupos disponibles y fecha vigente.
 - Al aceptar una postulacion se descuenta un cupo de la oferta.
