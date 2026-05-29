@@ -124,13 +124,13 @@ class VistaEstudiante:
             progreso = self.practicas.obtener_progreso_estudiante(self.usuario.id_usuario)
             practica = progreso["practica"]
             if practica is None:
-                print("No tiene una practica activa.")
+                print("No tiene practicas registradas.")
                 pausar()
                 return
 
             print(f"Practica: {practica.id_practica}")
             print(f"Estado: {practica.estado}")
-            print(f"Horas cumplidas: {progreso['horas_cumplidas']}")
+            print(f"Horas cumplidas: {progreso['horas_cumplidas']}/{progreso['horas_requeridas']}")
             print(f"Actividades registradas: {progreso['actividades_registradas']}")
             print(f"Actividades aprobadas: {progreso['actividades_aprobadas']}")
             print(f"Actividades completadas: {progreso['actividades_completadas']}")

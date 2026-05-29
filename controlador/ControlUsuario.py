@@ -1,4 +1,3 @@
-"""Casos de uso para usuarios y autenticacion."""
 
 from __future__ import annotations
 
@@ -18,24 +17,23 @@ from utilidades.Excepciones import AutenticacionError, EntidadDuplicadaError, Va
 from utilidades.IDgenerator import generar_id
 from utilidades.ManejoDatos import ManejoDatos
 
-
 class ControlUsuario:
-    """Gestiona registro, login y mantenimiento basico de usuarios."""
-
     def registrar_estudiante(
-        self,
-        nombre: str,
-        email: str,
-        password: str,
-        cedula: str,
-        carrera: str,
-        ciclo_actual: int,
-        matriculado: bool,
+            self,
+            nombres: str,
+            apellidos: str,
+            email: str,
+            password: str,
+            cedula: str,
+            carrera: str,
+            ciclo_actual: int,
+            matriculado: bool,
     ) -> Estudiante:
         self._validar_email_unico(email)
         estudiante = Estudiante(
             id_usuario=generar_id("EST"),
-            nombre=nombre,
+            nombres=nombres,
+            apellidos=apellidos,
             email=email,
             password=password,
             rol=ROLES["ESTUDIANTE"],
@@ -47,11 +45,18 @@ class ControlUsuario:
         estudiante.guardar()
         return estudiante
 
-    def registrar_coordinador(self, nombre: str, email: str, password: str) -> Coordinador:
+    def registrar_coordinador(
+            self,
+            nombres: str,
+            apellidos: str,
+            email: str,
+            password: str,
+    ) -> Coordinador:
         self._validar_email_unico(email)
         coordinador = Coordinador(
             id_usuario=generar_id("COO"),
-            nombre=nombre,
+            nombres=nombres,
+            apellidos=apellidos,
             email=email,
             password=password,
             rol=ROLES["COORDINADOR"],
@@ -60,16 +65,18 @@ class ControlUsuario:
         return coordinador
 
     def registrar_tutor_academico(
-        self,
-        nombre: str,
-        email: str,
-        password: str,
-        carrera: str,
+            self,
+            nombres: str,
+            apellidos: str,
+            email: str,
+            password: str,
+            carrera: str,
     ) -> TutorAcademico:
         self._validar_email_unico(email)
         tutor = TutorAcademico(
             id_usuario=generar_id("TAC"),
-            nombre=nombre,
+            nombres=nombres,
+            apellidos=apellidos,
             email=email,
             password=password,
             rol=ROLES["TUTOR_ACADEMICO"],
@@ -79,18 +86,20 @@ class ControlUsuario:
         return tutor
 
     def registrar_tutor_empresarial(
-        self,
-        nombre: str,
-        email: str,
-        password: str,
-        id_empresa: str,
-        cargo: str,
+            self,
+            nombres: str,
+            apellidos: str,
+            email: str,
+            password: str,
+            id_empresa: str,
+            cargo: str,
     ) -> TutorEmpresarial:
         self._validar_email_unico(email)
         Empresa.obtener_por_id(id_empresa)
         tutor = TutorEmpresarial(
             id_usuario=generar_id("TEM"),
-            nombre=nombre,
+            nombres=nombres,
+            apellidos=apellidos,
             email=email,
             password=password,
             rol=ROLES["TUTOR_EMPRESARIAL"],
@@ -100,11 +109,18 @@ class ControlUsuario:
         tutor.guardar()
         return tutor
 
-    def registrar_administrador(self, nombre: str, email: str, password: str) -> Administrador:
+    def registrar_administrador(
+            self,
+            nombres: str,
+            apellidos: str,
+            email: str,
+            password: str,
+    ) -> Administrador:
         self._validar_email_unico(email)
         administrador = Administrador(
             id_usuario=generar_id("ADM"),
-            nombre=nombre,
+            nombres=nombres,
+            apellidos=apellidos,
             email=email,
             password=password,
             rol=ROLES["ADMINISTRADOR"],

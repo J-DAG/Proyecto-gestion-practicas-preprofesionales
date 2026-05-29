@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from controlador.ControlAdministrador import ConrolAdministrador
+from controlador.ControlAdministrador import ControlAdministrador
 from controlador.ControlOferta import ControlOferta
 from controlador.ControlUsuario import ControlUsuario
 from modelo.Usuario import Administrador
@@ -13,7 +13,7 @@ from vista.ValidacionDatos import imprimir_tabla, leer_bool, leer_entero, leer_t
 class VistaAdministrador:
     def __init__(self, usuario: Administrador) -> None:
         self.usuario = usuario
-        self.admin = ConrolAdministrador()
+        self.admin = ControlAdministrador()
         self.ofertas = ControlOferta()
         self.usuarios = ControlUsuario()
 
@@ -52,7 +52,8 @@ class VistaAdministrador:
     def _registrar_estudiante(self) -> None:
         try:
             estudiante = self.usuarios.registrar_estudiante(
-                leer_texto("Nombre: "),
+                leer_texto("Nombres: "),
+                leer_texto("Apellidos: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
                 leer_texto("Cedula: "),
@@ -68,7 +69,8 @@ class VistaAdministrador:
     def _registrar_coordinador(self) -> None:
         try:
             coordinador = self.usuarios.registrar_coordinador(
-                leer_texto("Nombre: "),
+                leer_texto("Nombres: "),
+                leer_texto("Apellidos: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
             )
@@ -80,7 +82,8 @@ class VistaAdministrador:
     def _registrar_administrador(self) -> None:
         try:
             administrador = self.usuarios.registrar_administrador(
-                leer_texto("Nombre: "),
+                leer_texto("Nombres: "),
+                leer_texto("Apellidos: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
             )
@@ -92,7 +95,8 @@ class VistaAdministrador:
     def _registrar_tutor_academico(self) -> None:
         try:
             tutor = self.usuarios.registrar_tutor_academico(
-                leer_texto("Nombre: "),
+                leer_texto("Nombres: "),
+                leer_texto("Apellidos: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
                 leer_texto("Carrera: "),
@@ -106,7 +110,8 @@ class VistaAdministrador:
         try:
             self._mostrar_empresas()
             tutor = self.usuarios.registrar_tutor_empresarial(
-                leer_texto("Nombre: "),
+                leer_texto("Nombres: "),
+                leer_texto("Apellidos: "),
                 leer_texto("Email: "),
                 leer_texto("Password: "),
                 leer_texto("ID empresa: "),

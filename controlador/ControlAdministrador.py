@@ -8,7 +8,7 @@ from modelo.Usuario import Usuario
 from utilidades.ManejoDatos import ManejoDatos
 
 
-class ConrolAdministrador:
+class ControlAdministrador:
     def listar_entidades(self, nombre_archivo: str) -> list[object]:
         return ManejoDatos(nombre_archivo).cargar()
 

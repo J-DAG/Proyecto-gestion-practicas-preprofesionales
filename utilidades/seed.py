@@ -17,6 +17,8 @@ def inicializar_archivos_dat() -> None:
 
 
 def sembrar_datos_prueba() -> None:
+    """Crea usuarios, empresa y oferta iniciales cuando el sistema esta vacio."""
+
     inicializar_archivos_dat()
     if Usuario.cargar_todos():
         return
@@ -24,16 +26,28 @@ def sembrar_datos_prueba() -> None:
     usuarios = ControlUsuario()
     ofertas = ControlOferta()
 
-    usuarios.registrar_administrador("Admin General", "admin@uleam.edu.ec", "admin123")
-    usuarios.registrar_coordinador("Coord Practicas", "coord@uleam.edu.ec", "coord123")
+    usuarios.registrar_administrador(
+        "Admin",
+        "General",
+        "admin@uleam.edu.ec",
+        "admin123",
+    )
+    usuarios.registrar_coordinador(
+        "Coord",
+        "Practicas",
+        "coord@uleam.edu.ec",
+        "coord123",
+    )
     usuarios.registrar_tutor_academico(
-        "Tutor Academico",
+        "Tutor",
+        "Academico",
         "tutor.academico@uleam.edu.ec",
         "tutor123",
         "Software",
     )
     usuarios.registrar_estudiante(
-        "Ana Estudiante",
+        "Ana",
+        "Estudiante",
         "ana@uleam.edu.ec",
         "ana123",
         "1310000001",
@@ -54,7 +68,8 @@ def sembrar_datos_prueba() -> None:
         True,
     )
     usuarios.registrar_tutor_empresarial(
-        "Tutor Empresarial",
+        "Tutor",
+        "Empresarial",
         "tutor.empresarial@techandina.com",
         "tutor123",
         empresa.id_empresa,
@@ -68,7 +83,9 @@ def sembrar_datos_prueba() -> None:
         "Desarrollo de software",
         3,
         date.today() + timedelta(days=30),
-    )
+        )
+
+    # Tocar explicitamente archivos administrativos aun si no tienen datos semilla.
     for nombre in [
         "postulaciones",
         "practicas",

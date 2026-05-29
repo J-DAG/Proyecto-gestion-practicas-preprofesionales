@@ -11,7 +11,8 @@ from modelo.BasePersistente import BasePersistente
 @dataclass
 class Usuario(BasePersistente):
     id_usuario: str
-    nombre: str
+    nombres: str
+    apellidos: str
     email: str
     password: str
     rol: str
@@ -21,8 +22,23 @@ class Usuario(BasePersistente):
 
     def __post_init__(self) -> None:
         self.id = self.id_usuario
+        self._migrar_campos_legacy()
         if len(self.password) != 64:
             self.password = self.encriptar_password(self.password)
+
+    def __setstate__(self, estado: dict[str, object]) -> None:
+        self.__dict__.update(estado)
+        self._migrar_campos_legacy()
+
+    @property
+    def nombre(self) -> str:
+        return f"{self.nombres} {self.apellidos}".strip()
+
+    def _migrar_campos_legacy(self) -> None:
+        if "nombres" not in self.__dict__:
+            self.nombres = str(self.__dict__.get("nombre", "")).strip()
+        if "apellidos" not in self.__dict__:
+            self.apellidos = ""
 
     def encriptar_password(self, password: str) -> str:
         return hashlib.sha256(password.encode("utf-8")).hexdigest()
