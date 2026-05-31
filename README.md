@@ -77,6 +77,10 @@ Los usuarios guardan nombres, apellidos y cedula como datos generales. La propie
 - Una practica requiere tutor academico y tutor empresarial validos.
 - El tutor empresarial solo gestiona practicas asignadas a su usuario.
 - El tutor academico solo aprueba o califica practicas asignadas a su usuario.
+- Si se desactiva un tutor con practicas activas, se debe reasignar un tutor activo del mismo rol.
+- No se puede desactivar el ultimo coordinador activo del sistema.
+- No se puede desactivar un estudiante con practica activa.
+- Al desactivar un estudiante sin practica activa, sus postulaciones abiertas se rechazan automaticamente.
 - Las actividades registradas no pueden superar 240 horas en total.
 - Una actividad completada no puede editarse.
 - Una actividad completada no puede perder su aprobacion academica.

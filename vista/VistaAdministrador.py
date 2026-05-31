@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from configuracion.ajustes import ROLES
 from controlador.ControlAdministrador import ControlAdministrador
 from controlador.ControlOferta import ControlOferta
 from controlador.ControlUsuario import ControlUsuario
@@ -133,9 +134,22 @@ class VistaAdministrador:
     def _activar_desactivar(self) -> None:
         try:
             self._mostrar_usuarios()
+            id_usuario = leer_texto("ID usuario: ")
+            activo = leer_bool("Activo")
+            id_reemplazo = None
+            usuario_actual = self.usuarios.buscar_usuario(id_usuario)
+
+            if usuario_actual is not None and not activo:
+                practicas = self.admin.listar_practicas_activas_asignadas(id_usuario)
+                if practicas:
+                    self._mostrar_practicas_asignadas(practicas)
+                    self._mostrar_tutores_reemplazo(usuario_actual.rol, id_usuario)
+                    id_reemplazo = leer_texto("ID tutor reemplazo: ")
+
             usuario = self.admin.activar_desactivar_cuenta(
-                leer_texto("ID usuario: "),
-                leer_bool("Activo"),
+                id_usuario,
+                activo,
+                id_reemplazo,
             )
             print(f"Usuario actualizado: {usuario.id_usuario} activo={usuario.activo}")
         except SistemaPracticasError as error:
@@ -171,3 +185,26 @@ class VistaAdministrador:
                 f"- {usuario.id_usuario} | {usuario.nombre} | "
                 f"Cedula: {usuario.cedula} | {usuario.email} | {usuario.rol} | {estado}"
             )
+
+    def _mostrar_practicas_asignadas(self, practicas: list[object]) -> None:
+        print("\nPracticas activas asignadas al tutor:")
+        for practica in practicas:
+            print(
+                f"- {practica.id_practica} | Estudiante: {practica.id_estudiante} | "
+                f"Horas: {practica.horas_cumplidas}/240"
+            )
+
+    def _mostrar_tutores_reemplazo(self, rol: str, id_usuario_actual: str) -> None:
+        if rol not in {ROLES["TUTOR_ACADEMICO"], ROLES["TUTOR_EMPRESARIAL"]}:
+            return
+
+        print("\nTutores disponibles para reemplazo:")
+        tutores = [
+            usuario
+            for usuario in self.usuarios.listar_usuarios()
+            if usuario.rol == rol and usuario.activo and usuario.id_usuario != id_usuario_actual
+        ]
+        if not tutores:
+            print("No hay tutores activos disponibles para reemplazo.")
+        for tutor in tutores:
+            print(f"- {tutor.id_usuario} | {tutor.nombre} | {tutor.email}")
