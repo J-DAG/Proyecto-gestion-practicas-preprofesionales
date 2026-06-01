@@ -29,7 +29,7 @@ class MainMenu:
             print("\n=== Sistema de Gestion de Practicas Preprofesionales ===")
             print("1. Iniciar sesion")
             print("0. Salir")
-            opcion = leer_texto("Seleccione: ")
+            opcion = leer_texto("Selection: ")
 
             if opcion == "1":
                 self._login()

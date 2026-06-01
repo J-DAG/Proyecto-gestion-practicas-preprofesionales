@@ -4,11 +4,27 @@ Aplicacion de consola en Python para gestionar practicas preprofesionales. Usa u
 
 ## Ejecutar
 
+Instalar dependencias graficas si se usara PyQt6:
+
+```bash
+pip install -r requirements.txt
+```
+
+Consola:
+
 ```bash
 python main.py
 ```
 
 El archivo [main.py](main.py) inicializa los datos de prueba si `datos/usuarios.dat` esta vacio y luego abre el menu principal.
+
+Interfaz grafica PyQt6:
+
+```bash
+python main_qt.py
+```
+
+La interfaz grafica usa los archivos `vista/ui_*.py` generados por PyQt6. No edites esos archivos directamente si luego se volveran a generar desde Qt Designer; la logica debe ir en wrappers como `vista/gui_app.py`.
 
 ## Credenciales de prueba
 
@@ -30,13 +46,14 @@ modelo/
 utilidades/
 vista/
 main.py
+main_qt.py
 README.md
 ```
 
 - `configuracion/`: constantes centrales, rutas de datos, roles y horas maximas.
 - `modelo/`: entidades persistentes como usuarios, empresas, ofertas, postulaciones, practicas, actividades, formularios y documentos.
 - `controlador/`: reglas de negocio y casos de uso.
-- `vista/`: menus de consola por rol.
+- `vista/`: menus de consola por rol, archivos `ui_*.py` generados por PyQt6 y wrappers graficos.
 - `utilidades/`: persistencia, excepciones, generacion de IDs y datos semilla.
 - `datos/`: archivos `.dat` persistidos localmente.
 
