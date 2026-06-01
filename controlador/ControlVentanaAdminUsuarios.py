@@ -15,6 +15,7 @@ from controlador.ControlVentanaEditarTA import ControlVentanaEditarTA
 from controlador.ControlVentanaEditarTE import ControlVentanaEditarTE
 from modelo.Usuario import Administrador, Coordinador, Estudiante, TutorAcademico, TutorEmpresarial, Usuario
 from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from vista.estilos import EstilosClase
 from vista.ui_admin_usuario_widget import Ui_formGestionUsuarios
 
 
@@ -43,6 +44,8 @@ class ControlVentanaAdminUsuarios(QtWidgets.QWidget, Ui_formGestionUsuarios):
         self.btnEditar.clicked.connect(self.editar_usuario)
         self.btnEliminar.clicked.connect(self.eliminar_usuario)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = [

@@ -9,12 +9,11 @@ from controlador.ControlVentanaTA import ControlVentanaTA
 from controlador.ControlVentanaTE import ControlVentanaTE
 from modelo.Usuario import Administrador, Coordinador, Estudiante, TutorAcademico, TutorEmpresarial
 from utilidades.Excepciones import SistemaPracticasError
+from vista.estilos import EstilosClase
 from vista.ui_inicio_sesion import Ui_frmInicioSesion
 
 
-class ControlPrincipal(
-    QtWidgets.QWidget,
-    Ui_frmInicioSesion,
+class ControlPrincipal(QtWidgets.QWidget,Ui_frmInicioSesion,
 ):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -23,6 +22,7 @@ class ControlPrincipal(
         self.ventana_usuario = None
         self.btnIniciarSesion.clicked.connect(self._login)
         self.btnCrearCuenta.clicked.connect(self.crear_cuenta)
+        self.lblTitulo.setFont(EstilosClase.titulo())
 
     def _login(self) -> None:
         try:

@@ -9,6 +9,7 @@ from controlador.ControlOferta import ControlOferta
 from controlador.ControlUsuario import ControlUsuario
 from modelo.Empresa import Empresa
 from modelo.Usuario import Administrador
+from vista.estilos import EstilosClase
 from vista.ui_main_window_admin import Ui_MainWindowAdmin
 
 
@@ -24,6 +25,8 @@ class ControlVentanaAdmin(QtWidgets.QMainWindow, Ui_MainWindowAdmin):
         self.ofertas = ControlOferta()
         self.usuarios = ControlUsuario()
         self.iniciar_controlador()
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def iniciar_controlador(self):
         self.configurar_tabla()

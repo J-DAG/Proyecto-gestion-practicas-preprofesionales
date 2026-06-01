@@ -9,6 +9,7 @@ from modelo.Practica import Practica
 from modelo.Usuario import Administrador, TutorEmpresarial, Usuario
 from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
 from utilidades.ManejoDatos import ManejoDatos
+from vista.estilos import EstilosClase
 from vista.ui_admin_empresa_widget import Ui_formGestionEmpresas
 
 
@@ -37,6 +38,8 @@ class ControlVentanaAdminEmpresas(QtWidgets.QWidget, Ui_formGestionEmpresas):
         self.btnEditar.clicked.connect(self.editar_empresa)
         self.btnEliminar.clicked.connect(self.eliminar_empresa)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Nombre", "RUC", "Email", "Sector", "Ubicacion", "Convenio"]
