@@ -1,5 +1,6 @@
 from PyQt6 import QtWidgets
 
+from controlador.ControlVentanaVerActividades import ControlVentanaVerActividades
 from modelo.Practica import Practica
 from modelo.Usuario import Coordinador
 from vista.ui_coordinador_practicas import Ui_frmAdministracionPracticas
@@ -31,6 +32,7 @@ class ControlVentanaCoordinadorPractica(QtWidgets.QWidget, Ui_frmAdministracionP
         self.txtBuscar.returnPressed.connect(self.buscar_practicas)
         self.txtBuscar.textChanged.connect(self.buscar_practicas)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
+        self.btnVerActividades.clicked.connect(self.ver_actividades)
 
     def configurar_tabla(self):
         columnas = ["ID", "Estudiante", "Empresa", "Inicio", "Fin", "Horas", "Estado"]
@@ -73,6 +75,25 @@ class ControlVentanaCoordinadorPractica(QtWidgets.QWidget, Ui_frmAdministracionP
             ]
             for columna, valor in enumerate(valores):
                 self.tblPracticas.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
+
+    def ver_actividades(self):
+        practica = self._practica_seleccionada()
+        if practica is None:
+            return
+        self.subventana = ControlVentanaVerActividades(practica, self)
+        self.subventana.show()
+        self.hide()
+
+    def _practica_seleccionada(self) -> Practica | None:
+        fila = self.tblPracticas.currentRow()
+        if fila < 0:
+            QtWidgets.QMessageBox.information(self, "Seleccion requerida", "Seleccione una practica de la tabla.")
+            return None
+
+        item = self.tblPracticas.item(fila, 0)
+        if item is None:
+            return None
+        return Practica.buscar_por_id(item.text())
 
     def volver_inicio(self):
         self._mostrar_principal()

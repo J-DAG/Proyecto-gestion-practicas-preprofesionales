@@ -20,6 +20,7 @@ class ControlVentanaCoordinador(QtWidgets.QMainWindow, Ui_MainWindowCoordinador)
         self.ventana_practicas = None
         self.ventana_reportes = None
         self.ventana_tutores = None
+        self.ventana_notificaciones = None
         self.setupUi(self)
         self.iniciar_controlador()
 
@@ -43,6 +44,8 @@ class ControlVentanaCoordinador(QtWidgets.QMainWindow, Ui_MainWindowCoordinador)
         self.btnPostulacion.triggered.connect(self.abrir_postulaciones)
         self.btnAdminOfertas.clicked.connect(self.abrir_ofertas)
         self.btnCrearOferta.triggered.connect(self.abrir_ofertas)
+        self.btnNotificaciones.triggered.connect(self.ver_notificaciones)
+        self.btnVerNotificaciones.clicked.connect(self.ver_notificaciones)
 
     def configurar_tabla(self):
         columnas = ["ID", "Estudiante", "Oferta", "Fecha", "Estado"]
@@ -125,6 +128,16 @@ class ControlVentanaCoordinador(QtWidgets.QMainWindow, Ui_MainWindowCoordinador)
         self.ventana_tutores = ControlVentanaCoordinadorTutores(self.usuario, self, self.login)
         self.ventana_tutores.show()
         self.hide()
+
+    def ver_notificaciones(self):
+        from controlador.ControlVentanaNotificaciones import ControlVentanaNotificaciones
+
+        self.ventana_notificaciones = ControlVentanaNotificaciones(self.usuario, self)
+        self.ventana_notificaciones.show()
+        self.hide()
+
+    def ver_notificaiones(self):
+        self.ver_notificaciones()
 
     def salir(self):
         self.close()

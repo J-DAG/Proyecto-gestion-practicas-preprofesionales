@@ -1,7 +1,9 @@
 from PyQt6 import QtWidgets
 
+from controlador.ControlPostulacion import ControlPostulacion
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Coordinador
+from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
 from vista.ui_coordinador_postulaciones import Ui_frmPostulaciones
 
 
@@ -11,6 +13,7 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
         self.usuario = usuario
         self.ventana_coordinador = ventana_coordinador
         self.login = login
+        self.postulaciones = ControlPostulacion()
         self.subventana = None
         self.cerrando_sesion = False
         self.setupUi(self)
@@ -31,6 +34,8 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
         self.txtBuscar.returnPressed.connect(self.buscar_postulaciones)
         self.txtBuscar.textChanged.connect(self.buscar_postulaciones)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
+        self.btnAprobar.clicked.connect(self.aprobar_postulacion)
+        self.btnNegar.clicked.connect(self.negar_postulacion)
 
     def configurar_tabla(self):
         columnas = ["ID", "Estudiante", "Oferta", "Fecha", "Estado"]
@@ -71,6 +76,64 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
             ]
             for columna, valor in enumerate(valores):
                 self.tblPostulaciones.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
+
+    def aprobar_postulacion(self):
+        postulacion = self._postulacion_seleccionada()
+        if postulacion is None:
+            return
+
+        try:
+            if postulacion.estado != "pendiente":
+                raise ReglaNegocioError("Solo se puede aprobar una postulacion pendiente.")
+            postulacion = self.postulaciones.validar_postulacion(
+                postulacion.id_postulacion,
+                self.usuario,
+            )
+            QtWidgets.QMessageBox.information(
+                self,
+                "Postulacion aprobada",
+                f"Postulacion {postulacion.id_postulacion} actualizada a estado: {postulacion.estado}.",
+            )
+            self._refrescar_vistas()
+        except SistemaPracticasError as error:
+            QtWidgets.QMessageBox.warning(self, "No se pudo aprobar", str(error))
+
+    def negar_postulacion(self):
+        postulacion = self._postulacion_seleccionada()
+        if postulacion is None:
+            return
+
+        respuesta = QtWidgets.QMessageBox.question(
+            self,
+            "Negar postulacion",
+            f"Se rechazara la postulacion {postulacion.id_postulacion}. Desea continuar?",
+        )
+        if respuesta != QtWidgets.QMessageBox.StandardButton.Yes:
+            return
+
+        try:
+            if postulacion.estado == "aceptada":
+                raise ReglaNegocioError("No se puede negar una postulacion aceptada.")
+            postulacion = self.postulaciones.rechazar_postulacion(postulacion.id_postulacion)
+            QtWidgets.QMessageBox.information(
+                self,
+                "Postulacion negada",
+                f"Postulacion {postulacion.id_postulacion} actualizada a estado: {postulacion.estado}.",
+            )
+            self._refrescar_vistas()
+        except SistemaPracticasError as error:
+            QtWidgets.QMessageBox.warning(self, "No se pudo negar", str(error))
+
+    def _postulacion_seleccionada(self) -> Postulacion | None:
+        fila = self.tblPostulaciones.currentRow()
+        if fila < 0:
+            QtWidgets.QMessageBox.information(self, "Seleccion requerida", "Seleccione una postulacion de la tabla.")
+            return None
+
+        item = self.tblPostulaciones.item(fila, 0)
+        if item is None:
+            return None
+        return Postulacion.buscar_por_id(item.text())
 
     def volver_inicio(self):
         self._mostrar_principal()
@@ -118,6 +181,12 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
         self.subventana = ventana
         self.subventana.show()
         self.hide()
+
+    def _refrescar_vistas(self):
+        self.cargar_datos()
+        if self.ventana_coordinador is not None:
+            self.ventana_coordinador.cargar_datos()
+            self.ventana_coordinador.cargar_resumen()
 
     def _mostrar_principal(self):
         if self.ventana_coordinador is not None:
