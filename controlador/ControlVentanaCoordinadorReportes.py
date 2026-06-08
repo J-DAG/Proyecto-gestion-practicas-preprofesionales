@@ -5,6 +5,7 @@ from modelo.Empresa import Empresa
 from modelo.Postulacion import Postulacion
 from modelo.Practica import Practica
 from modelo.Usuario import Coordinador, Usuario
+from vista.estilos import EstilosClase
 from vista.ui_coordinador_informacion_reportes import Ui_frmReportes
 
 
@@ -30,6 +31,8 @@ class ControlVentanaCoordinadorReportes(QtWidgets.QWidget, Ui_frmReportes):
         self.btnPracticas.clicked.connect(self.abrir_practicas)
         self.btnPostulaciones.clicked.connect(self.abrir_postulaciones)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def cargar_resumen(self):
         usuarios = Usuario.cargar_todos()

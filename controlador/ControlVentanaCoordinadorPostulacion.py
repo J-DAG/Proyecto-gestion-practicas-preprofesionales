@@ -4,6 +4,7 @@ from controlador.ControlPostulacion import ControlPostulacion
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Coordinador
 from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
+from vista.estilos import EstilosClase
 from vista.ui_coordinador_postulaciones import Ui_frmPostulaciones
 
 
@@ -36,6 +37,8 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
         self.btnAprobar.clicked.connect(self.aprobar_postulacion)
         self.btnNegar.clicked.connect(self.negar_postulacion)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Estudiante", "Oferta", "Fecha", "Estado"]

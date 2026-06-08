@@ -5,6 +5,7 @@ from modelo.Empresa import Empresa
 from modelo.Postulacion import Postulacion
 from modelo.Practica import Practica
 from modelo.Usuario import Coordinador, Usuario
+from vista.estilos import EstilosClase
 from vista.ui_main_window_coordinadador import Ui_MainWindowCoordinador
 
 
@@ -46,6 +47,8 @@ class ControlVentanaCoordinador(QtWidgets.QMainWindow, Ui_MainWindowCoordinador)
         self.btnCrearOferta.triggered.connect(self.abrir_ofertas)
         self.btnNotificaciones.triggered.connect(self.ver_notificaciones)
         self.btnVerNotificaciones.clicked.connect(self.ver_notificaciones)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Estudiante", "Oferta", "Fecha", "Estado"]

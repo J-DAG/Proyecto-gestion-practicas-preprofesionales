@@ -7,6 +7,7 @@ from modelo.Postulacion import Postulacion
 from modelo.Usuario import Coordinador
 from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
 from utilidades.ManejoDatos import ManejoDatos
+from vista.estilos import EstilosClase
 from vista.ui_coordinador_ofertas import Ui_frmOfertas
 
 
@@ -39,7 +40,8 @@ class ControlVentanaCoordinadorOferta(QtWidgets.QWidget, Ui_frmOfertas):
         self.btnEditar.clicked.connect(self.editar_oferta)
         self.btnEliminar.clicked.connect(self.eliminar_oferta)
         self.btnNuevaOferta.clicked.connect(self.nueva_oferta)
-
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Empresa", "Titulo", "Area", "Cupos", "Cierre", "Estado"]

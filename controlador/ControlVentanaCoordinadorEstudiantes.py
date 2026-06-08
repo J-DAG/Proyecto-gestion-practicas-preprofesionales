@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets
 
 from configuracion.ajustes import ROLES
 from modelo.Usuario import Coordinador, Usuario
+from vista.estilos import EstilosClase
 from vista.ui_coordinador_estudiante import Ui_frmEstudiantes
 
 
@@ -31,6 +32,8 @@ class ControlVentanaCoordinadorEstudiantes(QtWidgets.QWidget, Ui_frmEstudiantes)
         self.txtBuscar.returnPressed.connect(self.buscar_estudiantes)
         self.txtBuscar.textChanged.connect(self.buscar_estudiantes)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Nombres", "Apellidos", "Cedula", "Email", "Carrera", "Ciclo"]

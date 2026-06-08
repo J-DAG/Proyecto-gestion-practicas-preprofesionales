@@ -27,8 +27,6 @@ def main() -> None:
 
 
 def preparar_rutas_recursos() -> None:
-    """Permite que los ui_*.py encuentren ./iconos y ./imagenes."""
-
     base = Path(__file__).resolve().parent
     for carpeta in ("iconos", "imagenes"):
         destino = base / carpeta

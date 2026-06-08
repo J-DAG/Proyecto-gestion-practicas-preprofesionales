@@ -3,6 +3,7 @@ from PyQt6 import QtWidgets
 from controlador.ControlVentanaVerActividades import ControlVentanaVerActividades
 from modelo.Practica import Practica
 from modelo.Usuario import Coordinador
+from vista.estilos import EstilosClase
 from vista.ui_coordinador_practicas import Ui_frmAdministracionPracticas
 
 
@@ -33,6 +34,8 @@ class ControlVentanaCoordinadorPractica(QtWidgets.QWidget, Ui_frmAdministracionP
         self.txtBuscar.textChanged.connect(self.buscar_practicas)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
         self.btnVerActividades.clicked.connect(self.ver_actividades)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Estudiante", "Empresa", "Inicio", "Fin", "Horas", "Estado"]

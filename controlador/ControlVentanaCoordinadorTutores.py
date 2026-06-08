@@ -9,6 +9,7 @@ from controlador.ControlVentanaEditarTA import ControlVentanaEditarTA
 from controlador.ControlVentanaEditarTE import ControlVentanaEditarTE
 from modelo.Usuario import Coordinador, TutorAcademico, TutorEmpresarial, Usuario
 from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from vista.estilos import EstilosClase
 from vista.ui_coordinador_tutores import Ui_frmTutores
 
 
@@ -44,6 +45,8 @@ class ControlVentanaCoordinadorTutores(QtWidgets.QWidget, Ui_frmTutores):
         self.btnEditar.clicked.connect(self.editar_tutor)
         self.btnNuevoTA.clicked.connect(self.nuevo_TA)
         self.btnNuevoTE.clicked.connect(self.nuevo_TE)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Nombres", "Apellidos", "Cedula", "Email", "Rol", "Detalle"]
