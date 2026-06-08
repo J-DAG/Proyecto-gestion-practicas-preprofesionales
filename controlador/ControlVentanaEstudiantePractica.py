@@ -5,6 +5,7 @@ from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Practica import Actividad
 from modelo.Usuario import Estudiante, Usuario
+from vista.estilos import EstilosClase
 from vista.ui_EST_practicas import Ui_FormPracticaEstudiante
 
 
@@ -37,6 +38,8 @@ class ControlVentanaEstudiantePractica(QtWidgets.QWidget, Ui_FormPracticaEstudia
         self.rbtAprobadas.toggled.connect(self.buscar_actividades)
         self.rbtAprobadas_2.toggled.connect(self.buscar_actividades)
         self.rbtAprobadas_3.toggled.connect(self.buscar_actividades)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Descripcion", "Horas", "Fecha", "Aprobada", "Completada", "Estado"]

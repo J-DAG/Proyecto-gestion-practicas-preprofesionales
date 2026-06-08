@@ -8,6 +8,7 @@ from modelo.Postulacion import Postulacion
 from modelo.Usuario import Estudiante
 from utilidades.Excepciones import SistemaPracticasError, ReglaNegocioError
 from utilidades.ManejoDatos import ManejoDatos
+from vista.estilos import EstilosClase
 from vista.ui_EST_ofertas_laborales import Ui_FormESTOfertasLaborales
 
 
@@ -37,6 +38,8 @@ class ControlVentanaEstudianteOfertasLaborales(QtWidgets.QWidget, Ui_FormESTOfer
         self.txtBuscar.textChanged.connect(self.buscar_ofertas)
         self.btnAplicarPostulacion.clicked.connect(self.aplicar_postulacion)
         self.btnCancelarPostulacion.clicked.connect(self.cancelar_postulacion)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Empresa", "Titulo", "Area", "Cupos", "Cierre", "Estado"]

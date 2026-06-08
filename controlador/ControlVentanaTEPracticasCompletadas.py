@@ -5,6 +5,7 @@ from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Practica import Practica
 from modelo.Usuario import TutorEmpresarial, Usuario
+from vista.estilos import EstilosClase
 from vista.ui_TE_practicas_completadas import Ui_FormTEPracticasCompletadas
 
 
@@ -31,6 +32,8 @@ class ControlVentanaTEPracticasCompletadas(QtWidgets.QWidget, Ui_FormTEPracticas
         self.btnBuscar.clicked.connect(self.buscar_practicas)
         self.txtBuscar.returnPressed.connect(self.buscar_practicas)
         self.txtBuscar.textChanged.connect(self.buscar_practicas)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["Practica", "Estudiante", "Empresa", "Inicio", "Fin", "Horas", "Calificacion"]

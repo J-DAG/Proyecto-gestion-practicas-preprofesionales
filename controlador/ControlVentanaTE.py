@@ -4,6 +4,7 @@ from configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Usuario import TutorEmpresarial, Usuario
+from vista.estilos import EstilosClase
 from vista.ui_main_window_TE import Ui_MainWindowTE
 
 
@@ -31,6 +32,8 @@ class ControlVentanaTE(QtWidgets.QMainWindow, Ui_MainWindowTE):
         self.btnNotificaciones.triggered.connect(self.ver_notificaciones)
         self.btnCompletadas.triggered.connect(self.practicas_completas)
         self.btnVerPracticasCompletadas.clicked.connect(self.practicas_completas)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["Practica", "Estudiante", "Empresa", "Inicio", "Horas", "Estado"]

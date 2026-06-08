@@ -6,6 +6,7 @@ from modelo.Empresa import Empresa
 from modelo.Practica import Practica
 from modelo.Usuario import TutorAcademico, Usuario
 from utilidades.Excepciones import SistemaPracticasError
+from vista.estilos import EstilosClase
 from vista.ui_TA_practicas_completadas import Ui_FormTAPracticasCompletadas
 
 
@@ -33,6 +34,8 @@ class ControlVentanaTAPracticasCompletas(QtWidgets.QWidget, Ui_FormTAPracticasCo
         self.txtBuscar.returnPressed.connect(self.buscar_practicas)
         self.txtBuscar.textChanged.connect(self.buscar_practicas)
         self.btnActividades.clicked.connect(self.calificar_estudiante)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["Practica", "Estudiante", "Empresa", "Inicio", "Fin", "Horas", "Calificacion"]

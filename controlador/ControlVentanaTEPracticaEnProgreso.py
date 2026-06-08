@@ -5,6 +5,7 @@ from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Practica import Practica
 from modelo.Usuario import TutorEmpresarial, Usuario
+from vista.estilos import EstilosClase
 from vista.ui_TE_practicas_progreso import Ui_FormTEPracticasProgreso
 
 
@@ -32,6 +33,8 @@ class ControlVentanaTEPracticaEnProgreso(QtWidgets.QWidget, Ui_FormTEPracticasPr
         self.txtBuscar.returnPressed.connect(self.buscar_practicas)
         self.txtBuscar.textChanged.connect(self.buscar_practicas)
         self.btnActividades.clicked.connect(self.ver_actividades)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["Practica", "Estudiante", "Empresa", "Inicio", "Fin", "Horas", "Estado"]

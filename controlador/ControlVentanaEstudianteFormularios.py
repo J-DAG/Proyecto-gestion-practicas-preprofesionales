@@ -4,6 +4,7 @@ from controlador.ControlPractica import ControlPractica
 from modelo.Documentos import Formulario
 from modelo.Practica import Practica
 from modelo.Usuario import Estudiante
+from vista.estilos import EstilosClase
 from vista.ui_EST_formularios import Ui_FormEST
 
 
@@ -33,7 +34,12 @@ class ControlVentanaEstudianteFormularios(QtWidgets.QWidget, Ui_FormEST):
         self.btnOfertaLaboral.clicked.connect(self.ver_ofertas)
         self.btnMisFormularios.clicked.connect(self.cargar_datos)
         self.btnCerrarSesion.clicked.connect(self.cerrar_sesion)
-
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
+    """"
+    Configurar lo de no tiene convenio para enviar carta compromiso
+    vista de formularios 1 y 2
+    """
     def configurar_tabla(self):
         columnas = ["ID", "Practica", "Tipo", "Fecha", "Calificacion", "Observaciones"]
         self.tblFormularios.setColumnCount(len(columnas))

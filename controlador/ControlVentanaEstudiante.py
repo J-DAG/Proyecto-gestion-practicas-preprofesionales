@@ -3,6 +3,7 @@ from PyQt6 import QtWidgets
 from controlador.ControlOferta import ControlOferta
 from modelo.Empresa import Empresa
 from modelo.Usuario import Estudiante
+from vista.estilos import EstilosClase
 from vista.ui_main_window_estudiante import Ui_MainWindowEstudiante
 
 
@@ -31,6 +32,8 @@ class ControlVentanaEstudiante(QtWidgets.QMainWindow, Ui_MainWindowEstudiante):
         self.btnMisPostulaciones.clicked.connect(self.ver_postulaciones)
         self.btnOfertas.triggered.connect(self.ver_ofertas)
         self.btnVerOfertaLaboral.clicked.connect(self.ver_ofertas)
+        self.lblTitulo.setFont(EstilosClase.titulo_usurios())
+        self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
         columnas = ["ID", "Empresa", "Titulo", "Area", "Cupos", "Cierre", "Estado"]
