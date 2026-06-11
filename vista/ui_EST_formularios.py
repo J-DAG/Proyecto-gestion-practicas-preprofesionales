@@ -253,6 +253,12 @@ class Ui_FormEST(object):
         self.widgetF1 = QtWidgets.QWidget(parent=FormEST)
         self.widgetF1.setGeometry(QtCore.QRect(80, 200, 521, 551))
         self.widgetF1.setObjectName("widgetF1")
+        self.btnCartaCompromiso = QtWidgets.QPushButton(parent=FormEST)
+        self.btnCartaCompromiso.setGeometry(QtCore.QRect(970, 130, 161, 31))
+        icon6 = QtGui.QIcon()
+        icon6.addPixmap(QtGui.QPixmap("./iconos/article.png"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        self.btnCartaCompromiso.setIcon(icon6)
+        self.btnCartaCompromiso.setObjectName("btnCartaCompromiso")
 
         self.retranslateUi(FormEST)
         QtCore.QMetaObject.connectSlotsByName(FormEST)
@@ -275,4 +281,4 @@ class Ui_FormEST(object):
         self.btnMisPostulaciones.setText(_translate("FormEST", "Mis postulaciones"))
         self.lblTitulo_2.setText(_translate("FormEST", "Formulario 1:"))
         self.lblTitulo_3.setText(_translate("FormEST", "Formulario 2:"))
-
+        self.btnCartaCompromiso.setText(_translate("FormEST", "Carta compromiso"))

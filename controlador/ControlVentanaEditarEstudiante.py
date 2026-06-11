@@ -25,7 +25,7 @@ class ControlVentanaEditarEstudiante(QtWidgets.QWidget, Ui_frmEditarCuentaEstudi
         llenar_combo_carreras(self.cbxCarrera)
         llenar_combo_ciclos(self.cbsCicloActual)
         self._cargar_usuario()
-        self.btnGuardarCambios.clicked.connect(self.guardar)
+        self.btnGuardar.clicked.connect(self.guardar)
         self.btnCancelar.clicked.connect(self.close)
 
     def _cargar_usuario(self):

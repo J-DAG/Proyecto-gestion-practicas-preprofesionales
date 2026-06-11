@@ -39,11 +39,10 @@ class ControlPractica:
             raise ValidacionError("Toda practica requiere tutor academico y tutor empresarial.")
         if fecha_fin < fecha_inicio:
             raise ValidacionError("La fecha de fin no puede ser anterior a la fecha de inicio.")
-        self._validar_tutor_academico(id_tutor_academico)
-        self._validar_tutor_empresarial(tutor_empresarial)
-
         oferta = Oferta.obtener_por_id(postulacion.id_oferta)
         empresa = Empresa.obtener_por_id(oferta.id_empresa)
+        self._validar_tutor_academico(id_tutor_academico)
+        self._validar_tutor_empresarial(tutor_empresarial, empresa.id_empresa)
 
         practica = Practica(
             id_practica=generar_id("PRA"),
@@ -257,7 +256,13 @@ class ControlPractica:
         formulario.guardar()
         return formulario
 
-    def emitir_documento(self, id_practica: str, tipo: str, gestionado_por: str) -> Documento:
+    def emitir_documento(
+            self,
+            id_practica: str,
+            tipo: str,
+            gestionado_por: str,
+            contenido: str = "",
+    ) -> Documento:
         Practica.obtener_por_id(id_practica)
         documento = Documento(
             id_documento=generar_id("DOC"),
@@ -265,6 +270,7 @@ class ControlPractica:
             tipo=tipo,
             gestionado_por=gestionado_por,
             fecha_emision=date.today(),
+            contenido=contenido,
         )
         documento.guardar()
         return documento
@@ -279,10 +285,30 @@ class ControlPractica:
         if empresa.convenio_vigente:
             return None
 
+        estudiante = Usuario.buscar_por_id(practica.id_estudiante)
+        tutor_academico = Usuario.buscar_por_id(practica.id_tutor_academico)
+        tutor_empresarial = Usuario.buscar_por_id(practica.tutor_empresarial)
+        contenido = "\n".join(
+            [
+                "Carta compromiso - Practicas preprofesionales",
+                f"Practica: {practica.id_practica}",
+                f"Estudiante: {estudiante.nombre if estudiante else practica.id_estudiante}",
+                f"Empresa: {empresa.nombre_empresa}",
+                f"Fecha inicio: {practica.fecha_inicio}",
+                f"Fecha fin: {practica.fecha_fin}",
+                f"Tutor academico: {tutor_academico.nombre if tutor_academico else practica.id_tutor_academico}",
+                f"Tutor empresarial: {tutor_empresarial.nombre if tutor_empresarial else practica.tutor_empresarial}",
+                "",
+                "La empresa declara su compromiso de facilitar el desarrollo de actividades "
+                "formativas del estudiante durante la practica preprofesional, respetando "
+                "la planificacion academica y el seguimiento definido por la institucion.",
+            ]
+        )
         return self.emitir_documento(
             practica.id_practica,
             "Carta compromiso",
             "Coordinador",
+            contenido,
         )
 
     def listar_practicas(self) -> list[Practica]:
@@ -321,6 +347,15 @@ class ControlPractica:
             formulario
             for formulario in Formulario.cargar_todos()
             if formulario.id_practica in ids_practicas
+        ]
+
+    def listar_documentos_estudiante(self, id_estudiante: str) -> list[Documento]:
+        practicas = ManejoDatos("practicas").filtrar(id_estudiante=id_estudiante)
+        ids_practicas = {practica.id_practica for practica in practicas}
+        return [
+            documento
+            for documento in Documento.cargar_todos()
+            if documento.id_practica in ids_practicas
         ]
 
     def obtener_practica_activa_estudiante(self, id_estudiante: str) -> Practica | None:
@@ -677,8 +712,14 @@ class ControlPractica:
         tutor = Usuario.obtener_por_id(id_tutor_academico)
         if tutor.rol != ROLES["TUTOR_ACADEMICO"]:
             raise ReglaNegocioError("El tutor academico asignado debe tener rol de tutor academico.")
+        if not getattr(tutor, "activo", True):
+            raise ReglaNegocioError("El tutor academico asignado debe estar activo.")
 
-    def _validar_tutor_empresarial(self, id_tutor_empresarial: str) -> None:
+    def _validar_tutor_empresarial(self, id_tutor_empresarial: str, id_empresa: str) -> None:
         tutor = Usuario.obtener_por_id(id_tutor_empresarial)
         if tutor.rol != ROLES["TUTOR_EMPRESARIAL"]:
             raise ReglaNegocioError("El tutor empresarial asignado debe tener rol de tutor empresarial.")
+        if not getattr(tutor, "activo", True):
+            raise ReglaNegocioError("El tutor empresarial asignado debe estar activo.")
+        if getattr(tutor, "id_empresa", "") != id_empresa:
+            raise ReglaNegocioError("El tutor empresarial debe pertenecer a la misma empresa de la oferta.")

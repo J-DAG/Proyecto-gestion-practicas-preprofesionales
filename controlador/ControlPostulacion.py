@@ -1,21 +1,28 @@
 from __future__ import annotations
 
+import shutil
 from datetime import date
+from pathlib import Path
 
-from configuracion.ajustes import ROLES
+from configuracion.ajustes import DATOS_DIR, ROLES
 from controlador.ControlNotificacion import ControlNotificacion
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Estudiante, Usuario
-from utilidades.Excepciones import AutorizacionError, EntidadDuplicadaError, ReglaNegocioError
+from utilidades.Excepciones import AutorizacionError, EntidadDuplicadaError, ReglaNegocioError, ValidacionError
 from utilidades.IDgenerator import generar_id
 from utilidades.ManejoDatos import ManejoDatos
 
 
 class ControlPostulacion:
 
-    def crear_postulacion(self, id_estudiante: str, id_oferta: str) -> Postulacion:
+    def crear_postulacion(
+        self,
+        id_estudiante: str,
+        id_oferta: str,
+        ruta_documento_malla: str | None = None,
+    ) -> Postulacion:
         estudiante = self._obtener_estudiante(id_estudiante)
         oferta = Oferta.obtener_por_id(id_oferta)
 
@@ -43,6 +50,10 @@ class ControlPostulacion:
             id_oferta=id_oferta,
             fecha_postulacion=date.today(),
         )
+        if ruta_documento_malla:
+            postulacion.adjuntar_documento_malla(
+                self._guardar_documento_malla(postulacion.id_postulacion, ruta_documento_malla)
+            )
         postulacion.guardar()
         return postulacion
 
@@ -51,6 +62,8 @@ class ControlPostulacion:
             raise AutorizacionError("Solo el Coordinador puede validar postulaciones.")
 
         postulacion = Postulacion.obtener_por_id(id_postulacion)
+        if not postulacion.tiene_documento_malla():
+            raise ReglaNegocioError("La postulacion no tiene adjunto el avance de malla en PDF.")
         postulacion.validar()
         postulacion.guardar()
         return postulacion
@@ -94,6 +107,31 @@ class ControlPostulacion:
 
     def listar_postulaciones(self) -> list[Postulacion]:
         return Postulacion.cargar_todos()
+
+    def obtener_documento_malla(self, id_postulacion: str) -> Path:
+        postulacion = Postulacion.obtener_por_id(id_postulacion)
+        if not postulacion.tiene_documento_malla():
+            raise ReglaNegocioError("La postulacion no tiene documento adjunto.")
+        ruta = Path(postulacion.ruta_documento_malla)
+        if not ruta.exists():
+            raise ReglaNegocioError("El archivo adjunto no existe en el almacenamiento local.")
+        return ruta
+
+    def _guardar_documento_malla(self, id_postulacion: str, ruta_origen: str) -> str:
+        origen = Path(ruta_origen)
+        if not origen.exists() or not origen.is_file():
+            raise ValidacionError("Seleccione un archivo PDF valido.")
+        if origen.suffix.lower() != ".pdf":
+            raise ValidacionError("El avance de malla debe ser un archivo PDF.")
+
+        destino_dir = DATOS_DIR / "documentos_postulacion"
+        destino_dir.mkdir(parents=True, exist_ok=True)
+        destino = destino_dir / f"{id_postulacion}_avance_malla.pdf"
+        try:
+            shutil.copy2(origen, destino)
+        except OSError as error:
+            raise ValidacionError(f"No se pudo guardar el PDF adjunto: {error}") from error
+        return str(destino)
 
     def _tiene_postulacion_aceptada(
         self,

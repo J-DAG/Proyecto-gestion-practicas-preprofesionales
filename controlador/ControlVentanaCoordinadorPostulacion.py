@@ -1,8 +1,9 @@
 from PyQt6 import QtWidgets
 
 from controlador.ControlPostulacion import ControlPostulacion
+from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
-from modelo.Usuario import Coordinador
+from modelo.Usuario import Coordinador, Usuario
 from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
 from vista.estilos import EstilosClase
 from vista.ui_coordinador_postulaciones import Ui_frmPostulaciones
@@ -41,7 +42,7 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
         self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
-        columnas = ["ID", "Estudiante", "Oferta", "Fecha", "Estado"]
+        columnas = ["ID", "Estudiante", "Oferta", "Fecha", "Estado", "Documento"]
         self.tblPostulaciones.setColumnCount(len(columnas))
         self.tblPostulaciones.setHorizontalHeaderLabels(columnas)
         self.tblPostulaciones.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -63,6 +64,8 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
                 if texto in postulacion.id_postulacion.lower()
                 or texto in postulacion.id_estudiante.lower()
                 or texto in postulacion.id_oferta.lower()
+                or texto in self._nombre_estudiante(postulacion.id_estudiante).lower()
+                or texto in self._titulo_oferta(postulacion.id_oferta).lower()
                 or texto in postulacion.estado.lower()
             ]
         self._llenar_tabla(postulaciones)
@@ -72,13 +75,22 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
         for fila, postulacion in enumerate(postulaciones):
             valores = [
                 postulacion.id_postulacion,
-                postulacion.id_estudiante,
-                postulacion.id_oferta,
+                self._nombre_estudiante(postulacion.id_estudiante),
+                self._titulo_oferta(postulacion.id_oferta),
                 postulacion.fecha_postulacion,
                 postulacion.estado,
+                "Adjunto" if postulacion.tiene_documento_malla() else "Sin adjunto",
             ]
             for columna, valor in enumerate(valores):
                 self.tblPostulaciones.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
+
+    def _nombre_estudiante(self, id_estudiante: str) -> str:
+        estudiante = Usuario.buscar_por_id(id_estudiante)
+        return estudiante.nombre if estudiante else id_estudiante
+
+    def _titulo_oferta(self, id_oferta: str) -> str:
+        oferta = Oferta.buscar_por_id(id_oferta)
+        return oferta.titulo if oferta else id_oferta
 
     def aprobar_postulacion(self):
         postulacion = self._postulacion_seleccionada()
@@ -88,16 +100,10 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
         try:
             if postulacion.estado != "pendiente":
                 raise ReglaNegocioError("Solo se puede aprobar una postulacion pendiente.")
-            postulacion = self.postulaciones.validar_postulacion(
-                postulacion.id_postulacion,
-                self.usuario,
-            )
-            QtWidgets.QMessageBox.information(
-                self,
-                "Postulacion aprobada",
-                f"Postulacion {postulacion.id_postulacion} actualizada a estado: {postulacion.estado}.",
-            )
-            self._refrescar_vistas()
+            from controlador.ControlVentanaRevisarDocumentoPostulacion import ControlVentanaRevisarDocumentoPostulacion
+
+            self.subventana = ControlVentanaRevisarDocumentoPostulacion(postulacion, self.usuario, self)
+            self.subventana.show()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo aprobar", str(error))
 

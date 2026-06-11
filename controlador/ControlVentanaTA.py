@@ -63,12 +63,19 @@ class ControlVentanaTA(QtWidgets.QMainWindow, Ui_MainWindowTA):
 
     def cargar_resumen(self):
         practicas = self.practicas.listar_practicas_por_tutor_academico(self.usuario.id_usuario)
-        estudiantes = {practica.id_estudiante for practica in practicas}
-        en_progreso = [practica for practica in practicas if practica.estado == "activa"]
-        completadas = [practica for practica in practicas if practica.estado == "finalizada"]
-        self.lblNumEstudiantesEditar.setText(str(len(estudiantes)).zfill(2))
-        self.lblNumPracticasProgresoEditar.setText(str(len(en_progreso)).zfill(2))
-        self.lblNumPracComprelatasEditar.setText(str(len(completadas)).zfill(2))
+        resumen = self._generar_resumen(practicas)
+        self.lblNumEstudiantesEditar.setText(str(resumen["estudiantes"]).zfill(2))
+        self.lblNumPracticasProgresoEditar.setText(str(resumen["practicas_activas"]).zfill(2))
+        self.lblNumPracComprelatasEditar.setText(str(resumen["practicas_finalizadas"]).zfill(2))
+
+    def _generar_resumen(self, practicas: list[object]) -> dict[str, int]:
+        estudiantes = set(map(lambda practica: practica.id_estudiante, practicas))
+        contar_practicas = lambda estado: sum(map(lambda practica: practica.estado == estado, practicas))
+        return {
+            "estudiantes": len(estudiantes),
+            "practicas_activas": contar_practicas("activa"),
+            "practicas_finalizadas": contar_practicas("finalizada"),
+        }
 
     def practicas_en_progreso(self):
         from controlador.ControlVentanaTAPracticasProgreso import ControlVentanaTAPracticasProgreso

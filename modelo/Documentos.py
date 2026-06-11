@@ -42,12 +42,22 @@ class Documento(BasePersistente):
     tipo: str
     gestionado_por: str
     fecha_emision: date
+    contenido: str = ""
 
     archivo: ClassVar[str] = "documentos"
     campo_id: ClassVar[str] = "id_documento"
 
     def __post_init__(self) -> None:
         self.id = self.id_documento
+        self._migrar_campos_legacy()
+
+    def __setstate__(self, estado: dict[str, object]) -> None:
+        self.__dict__.update(estado)
+        self._migrar_campos_legacy()
+
+    def _migrar_campos_legacy(self) -> None:
+        if "contenido" not in self.__dict__:
+            self.contenido = ""
 
 
 @dataclass

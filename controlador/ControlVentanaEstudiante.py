@@ -25,13 +25,17 @@ class ControlVentanaEstudiante(QtWidgets.QMainWindow, Ui_MainWindowEstudiante):
         self.btnNotificaciones.triggered.connect(self.ver_notificaciones)
         self.btnVerNotificaciones.clicked.connect(self.ver_notificaciones)
         self.btnEnProgreso.triggered.connect(self.ver_progreso)
-        self.btnMisPracticas.clicked.connect(self.ver_progreso)
         self.btnFormularios.triggered.connect(self.ver_formularios)
-        self.btnMisFormularios.clicked.connect(self.ver_formularios)
         self.btnPostulaciones.triggered.connect(self.ver_postulaciones)
-        self.btnMisPostulaciones.clicked.connect(self.ver_postulaciones)
         self.btnOfertas.triggered.connect(self.ver_ofertas)
-        self.btnVerOfertaLaboral.clicked.connect(self.ver_ofertas)
+        if hasattr(self, "btnMisPracticas"):
+            self.btnMisPracticas.clicked.connect(self.ver_progreso)
+        if hasattr(self, "btnMisFormularios"):
+            self.btnMisFormularios.clicked.connect(self.ver_formularios)
+        if hasattr(self, "btnMisPostulaciones"):
+            self.btnMisPostulaciones.clicked.connect(self.ver_postulaciones)
+        if hasattr(self, "btnVerOfertaLaboral"):
+            self.btnVerOfertaLaboral.clicked.connect(self.ver_ofertas)
         self.lblTitulo.setFont(EstilosClase.titulo_usurios())
         self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 

@@ -1,8 +1,16 @@
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
+
+try:
+    from PyQt6.QtCharts import QChart, QChartView, QPieSeries
+except ImportError:
+    QChart = None
+    QChartView = None
+    QPieSeries = None
 
 from controlador.ControlVentanaVerActividades import ControlVentanaVerActividades
+from modelo.Empresa import Empresa
 from modelo.Practica import Practica
-from modelo.Usuario import Coordinador
+from modelo.Usuario import Coordinador, Usuario
 from vista.estilos import EstilosClase
 from vista.ui_coordinador_practicas import Ui_frmAdministracionPracticas
 
@@ -48,7 +56,9 @@ class ControlVentanaCoordinadorPractica(QtWidgets.QWidget, Ui_frmAdministracionP
         self.tblPracticas.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 
     def cargar_datos(self):
-        self._llenar_tabla(Practica.cargar_todos())
+        practicas = Practica.cargar_todos()
+        self._llenar_tabla(practicas)
+        self._cargar_grafico_estado_practicas(practicas)
 
     def buscar_practicas(self):
         texto = self.txtBuscar.text().strip().lower()
@@ -60,17 +70,20 @@ class ControlVentanaCoordinadorPractica(QtWidgets.QWidget, Ui_frmAdministracionP
                 if texto in practica.id_practica.lower()
                 or texto in practica.id_estudiante.lower()
                 or texto in practica.id_empresa.lower()
+                or texto in self._nombre_estudiante(practica.id_estudiante).lower()
+                or texto in self._nombre_empresa(practica.id_empresa).lower()
                 or texto in practica.estado.lower()
             ]
         self._llenar_tabla(practicas)
+        self._cargar_grafico_estado_practicas(practicas)
 
     def _llenar_tabla(self, practicas: list[Practica]):
         self.tblPracticas.setRowCount(len(practicas))
         for fila, practica in enumerate(practicas):
             valores = [
                 practica.id_practica,
-                practica.id_estudiante,
-                practica.id_empresa,
+                self._nombre_estudiante(practica.id_estudiante),
+                self._nombre_empresa(practica.id_empresa),
                 practica.fecha_inicio,
                 practica.fecha_fin,
                 practica.horas_cumplidas,
@@ -78,6 +91,87 @@ class ControlVentanaCoordinadorPractica(QtWidgets.QWidget, Ui_frmAdministracionP
             ]
             for columna, valor in enumerate(valores):
                 self.tblPracticas.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
+
+    def _nombre_estudiante(self, id_estudiante: str) -> str:
+        estudiante = Usuario.buscar_por_id(id_estudiante)
+        return estudiante.nombre if estudiante else id_estudiante
+
+    def _nombre_empresa(self, id_empresa: str) -> str:
+        empresa = Empresa.buscar_por_id(id_empresa)
+        return empresa.nombre_empresa if empresa else id_empresa
+
+    def _cargar_grafico_estado_practicas(self, practicas: list[Practica]):
+        if QChart is None:
+            self._insertar_mensaje_widget(
+                self.widgetGraficoPastel,
+                "Instale PyQt6-Charts para visualizar este grafico.\n"
+                "Comando: pip install PyQt6-Charts",
+            )
+            return
+
+        datos: dict[str, int] = {}
+        for practica in practicas:
+            estado = practica.estado.strip().capitalize() if practica.estado else "Sin estado"
+            datos[estado] = datos.get(estado, 0) + 1
+
+        series = QPieSeries()
+        if not practicas:
+            series.append("Sin datos", 1)
+        else:
+            for estado, total in datos.items():
+                series.append(f"{estado}: {total}", total)
+
+        colores = [
+            QtGui.QColor("#2f80ed"),
+            QtGui.QColor("#27ae60"),
+            QtGui.QColor("#f2994a"),
+            QtGui.QColor("#9b51e0"),
+            QtGui.QColor("#eb5757"),
+        ]
+        for indice, porcion in enumerate(series.slices()):
+            porcion.setLabelVisible(True)
+            porcion.setColor(colores[indice % len(colores)])
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("Practicas por estado")
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(QtCore.Qt.AlignmentFlag.AlignBottom)
+        chart.setAnimationOptions(QChart.AnimationOption.SeriesAnimations)
+        chart.setBackgroundVisible(False)
+
+        self._insertar_chart_view(self.widgetGraficoPastel, chart)
+
+    def _insertar_chart_view(self, contenedor: QtWidgets.QWidget, chart: QChart):
+        self._limpiar_contenedor(contenedor)
+        layout = contenedor.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(contenedor)
+            layout.setContentsMargins(0, 0, 0, 0)
+        chart_view = QChartView(chart)
+        chart_view.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
+        layout.addWidget(chart_view)
+
+    def _insertar_mensaje_widget(self, contenedor: QtWidgets.QWidget, mensaje: str):
+        self._limpiar_contenedor(contenedor)
+        layout = contenedor.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(contenedor)
+            layout.setContentsMargins(12, 12, 12, 12)
+        label = QtWidgets.QLabel(mensaje)
+        label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        label.setWordWrap(True)
+        layout.addWidget(label)
+
+    def _limpiar_contenedor(self, contenedor: QtWidgets.QWidget):
+        layout = contenedor.layout()
+        if layout is None:
+            return
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
     def ver_actividades(self):
         practica = self._practica_seleccionada()

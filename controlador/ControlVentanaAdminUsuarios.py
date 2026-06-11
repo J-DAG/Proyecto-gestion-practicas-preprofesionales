@@ -136,25 +136,38 @@ class ControlVentanaAdminUsuarios(QtWidgets.QWidget, Ui_formGestionUsuarios):
         if usuario is None:
             return
 
-        if not usuario.activo:
-            QtWidgets.QMessageBox.information(self, "Usuario inactivo", "El usuario seleccionado ya esta inactivo.")
+        if usuario.id_usuario == self.usuario.id_usuario:
+            QtWidgets.QMessageBox.warning(
+                self,
+                "Accion no permitida",
+                "No puede eliminar su propia cuenta desde la sesion actual.",
+            )
             return
 
+        detalle = (
+            "Tambien se eliminaran sus postulaciones, practicas, actividades, "
+            "formularios, documentos y solicitudes asociadas."
+            if usuario.rol == ROLES["ESTUDIANTE"]
+            else (
+                "Solo se permitira si no deja referencias sueltas. "
+                "Para tutores con practicas o actividades se pedira un reemplazo."
+            )
+        )
         respuesta = QtWidgets.QMessageBox.question(
             self,
-            "Desactivar usuario",
-            f"Se desactivara la cuenta de {usuario.nombre}. Desea continuar?",
+            "Eliminar usuario",
+            f"Se eliminara permanentemente la cuenta de {usuario.nombre}.\n\n{detalle}\n\nDesea continuar?",
         )
         if respuesta != QtWidgets.QMessageBox.StandardButton.Yes:
             return
 
         try:
-            id_reemplazo = self._pedir_tutor_reemplazo_si_aplica(usuario)
-            self.admin.activar_desactivar_cuenta(usuario.id_usuario, False, id_reemplazo)
-            QtWidgets.QMessageBox.information(self, "Usuario desactivado", "Usuario desactivado correctamente.")
+            id_reemplazo = self._pedir_tutor_reemplazo_para_eliminar_si_aplica(usuario)
+            self.admin.eliminar_usuario(usuario.id_usuario, id_reemplazo)
+            QtWidgets.QMessageBox.information(self, "Usuario eliminado", "Usuario eliminado correctamente.")
             self._refrescar_vistas()
         except SistemaPracticasError as error:
-            QtWidgets.QMessageBox.warning(self, "No se pudo desactivar", str(error))
+            QtWidgets.QMessageBox.warning(self, "No se pudo eliminar", str(error))
 
     def cerrar_sesion(self):
         self.cerrando_sesion = True
@@ -226,6 +239,33 @@ class ControlVentanaAdminUsuarios(QtWidgets.QWidget, Ui_formGestionUsuarios):
             self,
             "Tutor reemplazo",
             "Seleccione el tutor que recibira las practicas activas:",
+            opciones,
+            0,
+            False,
+        )
+        if not aceptado:
+            raise ValidacionError("Debe seleccionar un tutor reemplazo.")
+        return opcion.split(" - ", 1)[0]
+
+    def _pedir_tutor_reemplazo_para_eliminar_si_aplica(self, usuario: Usuario) -> str | None:
+        if usuario.rol not in {ROLES["TUTOR_ACADEMICO"], ROLES["TUTOR_EMPRESARIAL"]}:
+            return None
+        if not self.admin.tutor_requiere_reemplazo_para_eliminar(usuario.id_usuario):
+            return None
+
+        tutores = [
+            tutor
+            for tutor in self.usuarios.listar_usuarios()
+            if tutor.rol == usuario.rol and tutor.activo and tutor.id_usuario != usuario.id_usuario
+        ]
+        if not tutores:
+            raise ValidacionError("No hay tutores activos disponibles para reemplazo.")
+
+        opciones = [f"{tutor.id_usuario} - {tutor.nombre}" for tutor in tutores]
+        opcion, aceptado = QtWidgets.QInputDialog.getItem(
+            self,
+            "Tutor reemplazo",
+            "Seleccione el tutor que recibira las practicas y actividades asociadas:",
             opciones,
             0,
             False,

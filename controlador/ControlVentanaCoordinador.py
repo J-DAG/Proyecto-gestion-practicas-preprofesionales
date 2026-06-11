@@ -2,6 +2,7 @@ from PyQt6 import QtWidgets
 
 from configuracion.ajustes import ROLES
 from modelo.Empresa import Empresa
+from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Practica import Practica
 from modelo.Usuario import Coordinador, Usuario
@@ -59,8 +60,8 @@ class ControlVentanaCoordinador(QtWidgets.QMainWindow, Ui_MainWindowCoordinador)
         for fila, postulacion in enumerate(postulaciones):
             valores = [
                 postulacion.id_postulacion,
-                postulacion.id_estudiante,
-                postulacion.id_oferta,
+                self._nombre_usuario(postulacion.id_estudiante),
+                self._titulo_oferta(postulacion.id_oferta),
                 postulacion.fecha_postulacion,
                 postulacion.estado,
             ]
@@ -70,11 +71,45 @@ class ControlVentanaCoordinador(QtWidgets.QMainWindow, Ui_MainWindowCoordinador)
     def cargar_resumen(self):
         usuarios = Usuario.cargar_todos()
         practicas = Practica.cargar_todos()
-        self.lblNumEstudiantes.setText(str(len([u for u in usuarios if u.rol == ROLES["ESTUDIANTE"]])))
-        self.lblNumTA.setText(str(len([u for u in usuarios if u.rol == ROLES["TUTOR_ACADEMICO"]])))
-        self.lblNumEmpresas.setText(str(len(Empresa.cargar_todos())))
-        self.lblNumPostulaciones.setText(str(len(Postulacion.cargar_todos())))
-        self.lblNumPracActiva.setText(str(len([p for p in practicas if p.estado == "activa"])))
+        postulaciones = Postulacion.cargar_todos()
+        resumen = self._generar_resumen(
+            usuarios,
+            practicas,
+            Empresa.cargar_todos(),
+            postulaciones,
+        )
+        self.lblNumEstudiantes.setText(str(resumen["estudiantes"]))
+        self.lblNumTA.setText(str(resumen["tutores_academicos"]))
+        self.lblTE.setText(str(resumen["tutores_empresariales"]))
+        self.lblNumEmpresas.setText(str(resumen["empresas"]))
+        self.lblNumPostulaciones.setText(str(resumen["postulaciones"]))
+        self.lblNumPracActiva.setText(str(resumen["practicas_activas"]))
+
+    def _generar_resumen(
+        self,
+        usuarios: list[Usuario],
+        practicas: list[Practica],
+        empresas: list[Empresa],
+        postulaciones: list[Postulacion],
+    ) -> dict[str, int]:
+        contar_rol = lambda rol: sum(map(lambda usuario: usuario.rol == rol, usuarios))
+        contar_practicas = lambda estado: sum(map(lambda practica: practica.estado == estado, practicas))
+        return {
+            "estudiantes": contar_rol(ROLES["ESTUDIANTE"]),
+            "tutores_academicos": contar_rol(ROLES["TUTOR_ACADEMICO"]),
+            "tutores_empresariales": contar_rol(ROLES["TUTOR_EMPRESARIAL"]),
+            "empresas": len(empresas),
+            "postulaciones": len(postulaciones),
+            "practicas_activas": contar_practicas("activa"),
+        }
+
+    def _nombre_usuario(self, id_usuario: str) -> str:
+        usuario = Usuario.buscar_por_id(id_usuario)
+        return usuario.nombre if usuario else id_usuario
+
+    def _titulo_oferta(self, id_oferta: str) -> str:
+        oferta = Oferta.buscar_por_id(id_oferta)
+        return oferta.titulo if oferta else id_oferta
 
     def abrir_empresas(self):
         from controlador.ControlVentanaCoordinadorEmpresa import ControlVentanaCoordinadorEmpresa

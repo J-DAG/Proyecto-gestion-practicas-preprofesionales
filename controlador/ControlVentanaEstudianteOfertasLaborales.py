@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from PyQt6 import QtWidgets
 
 from controlador.ControlOferta import ControlOferta
@@ -6,7 +8,7 @@ from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Estudiante
-from utilidades.Excepciones import SistemaPracticasError, ReglaNegocioError
+from utilidades.Excepciones import SistemaPracticasError
 from utilidades.ManejoDatos import ManejoDatos
 from vista.estilos import EstilosClase
 from vista.ui_EST_ofertas_laborales import Ui_FormESTOfertasLaborales
@@ -72,16 +74,10 @@ class ControlVentanaEstudianteOfertasLaborales(QtWidgets.QWidget, Ui_FormESTOfer
         oferta = self._oferta_seleccionada()
         if oferta is None:
             return
-        try:
-            postulacion = self.postulaciones.crear_postulacion(self.usuario.id_usuario, oferta.id_oferta)
-            QtWidgets.QMessageBox.information(
-                self,
-                "Postulacion registrada",
-                f"Postulacion creada correctamente: {postulacion.id_postulacion}",
-            )
-            self._refrescar_vistas()
-        except SistemaPracticasError as error:
-            QtWidgets.QMessageBox.warning(self, "No se pudo postular", str(error))
+        from controlador.ControlVentanaAdjuntarMalla import ControlVentanaAdjuntarMalla
+
+        self.subventana = ControlVentanaAdjuntarMalla(self.usuario, oferta, self)
+        self.subventana.show()
 
     def cancelar_postulacion(self):
         oferta = self._oferta_seleccionada()
@@ -110,6 +106,7 @@ class ControlVentanaEstudianteOfertasLaborales(QtWidgets.QWidget, Ui_FormESTOfer
             if p.id_postulacion != postulacion.id_postulacion
         }
         ManejoDatos("postulaciones").guardar(datos, "id_postulacion")
+        self._eliminar_documento_cancelado(postulacion)
         QtWidgets.QMessageBox.information(self, "Postulacion cancelada", "La postulacion pendiente fue cancelada.")
         self._refrescar_vistas()
 
@@ -181,6 +178,14 @@ class ControlVentanaEstudianteOfertasLaborales(QtWidgets.QWidget, Ui_FormESTOfer
     def _nombre_empresa(self, oferta: Oferta) -> str:
         empresa = Empresa.buscar_por_id(oferta.id_empresa)
         return empresa.nombre_empresa if empresa else oferta.id_empresa
+
+    def _eliminar_documento_cancelado(self, postulacion: Postulacion):
+        if not postulacion.ruta_documento_malla:
+            return
+        try:
+            Path(postulacion.ruta_documento_malla).unlink(missing_ok=True)
+        except OSError:
+            pass
 
     def _abrir_ventana(self, ventana):
         self.subventana = ventana

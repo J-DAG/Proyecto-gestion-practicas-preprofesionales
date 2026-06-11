@@ -22,7 +22,9 @@ class ControlPrincipal(QtWidgets.QWidget,Ui_frmInicioSesion,
         self.ventana_usuario = None
         self.btnIniciarSesion.clicked.connect(self._login)
         self.btnCrearCuenta.clicked.connect(self.crear_cuenta)
+        self.btnCrearCuenta.hide()
         self.lblTitulo.setFont(EstilosClase.titulo())
+        self.lblPregunta.hide()
 
     def _login(self) -> None:
         try:

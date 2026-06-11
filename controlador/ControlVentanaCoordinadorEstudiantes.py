@@ -1,6 +1,15 @@
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
+
+try:
+    from PyQt6.QtCharts import QChart, QChartView, QPieSeries
+except ImportError:
+    QChart = None
+    QChartView = None
+    QPieSeries = None
 
 from configuracion.ajustes import ROLES
+from modelo.Postulacion import Postulacion
+from modelo.Practica import Practica
 from modelo.Usuario import Coordinador, Usuario
 from vista.estilos import EstilosClase
 from vista.ui_coordinador_estudiante import Ui_frmEstudiantes
@@ -46,7 +55,9 @@ class ControlVentanaCoordinadorEstudiantes(QtWidgets.QWidget, Ui_frmEstudiantes)
         self.tblEstudiantes.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 
     def cargar_datos(self):
-        self._llenar_tabla(self._estudiantes())
+        estudiantes = self._estudiantes()
+        self._llenar_tabla(estudiantes)
+        self._cargar_grafico_estado(estudiantes)
 
     def buscar_estudiantes(self):
         texto = self.txtBuscar.text().strip().lower()
@@ -63,6 +74,7 @@ class ControlVentanaCoordinadorEstudiantes(QtWidgets.QWidget, Ui_frmEstudiantes)
                 or texto in estudiante.carrera.lower()
             ]
         self._llenar_tabla(estudiantes)
+        self._cargar_grafico_estado(estudiantes)
 
     def _estudiantes(self):
         return [usuario for usuario in Usuario.cargar_todos() if usuario.rol == ROLES["ESTUDIANTE"]]
@@ -81,6 +93,122 @@ class ControlVentanaCoordinadorEstudiantes(QtWidgets.QWidget, Ui_frmEstudiantes)
             ]
             for columna, valor in enumerate(valores):
                 self.tblEstudiantes.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))
+
+    def _cargar_grafico_estado(self, estudiantes: list[Usuario]):
+        if QChart is None:
+            self._insertar_mensaje_widget(
+                self.widgetGraficoPastel,
+                "Instale PyQt6-Charts para visualizar este grafico.\n"
+                "Comando: pip install PyQt6-Charts",
+            )
+            return
+
+        practicas_por_estudiante = self._practicas_por_estudiante()
+        postulaciones_por_estudiante = self._postulaciones_por_estudiante()
+        postulaciones_abiertas = {"pendiente", "validada", "en_terna"}
+        datos = {
+            "En practica": 0,
+            "Aprobado": 0,
+            "Postulando": 0,
+            "Sin iniciar": 0,
+        }
+
+        for estudiante in estudiantes:
+            estado = self._estado_estudiante_practica(
+                estudiante.id_usuario,
+                practicas_por_estudiante,
+                postulaciones_por_estudiante,
+                postulaciones_abiertas,
+            )
+            datos[estado] += 1
+
+        series = QPieSeries()
+        if not estudiantes:
+            series.append("Sin datos", 1)
+        else:
+            for estado, total in datos.items():
+                if total > 0:
+                    series.append(f"{estado}: {total}", total)
+
+        colores = [
+            QtGui.QColor("#2f80ed"),
+            QtGui.QColor("#27ae60"),
+            QtGui.QColor("#f2994a"),
+            QtGui.QColor("#bdbdbd"),
+        ]
+        for indice, porcion in enumerate(series.slices()):
+            porcion.setLabelVisible(True)
+            porcion.setColor(colores[indice % len(colores)])
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("Estado de aplicacion a practicas")
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(QtCore.Qt.AlignmentFlag.AlignBottom)
+        chart.setAnimationOptions(QChart.AnimationOption.SeriesAnimations)
+        chart.setBackgroundVisible(False)
+
+        self._insertar_chart_view(self.widgetGraficoPastel, chart)
+
+    def _practicas_por_estudiante(self) -> dict[str, list[Practica]]:
+        practicas_por_estudiante: dict[str, list[Practica]] = {}
+        for practica in Practica.cargar_todos():
+            practicas_por_estudiante.setdefault(practica.id_estudiante, []).append(practica)
+        return practicas_por_estudiante
+
+    def _postulaciones_por_estudiante(self) -> dict[str, list[Postulacion]]:
+        postulaciones_por_estudiante: dict[str, list[Postulacion]] = {}
+        for postulacion in Postulacion.cargar_todos():
+            postulaciones_por_estudiante.setdefault(postulacion.id_estudiante, []).append(postulacion)
+        return postulaciones_por_estudiante
+
+    def _estado_estudiante_practica(
+        self,
+        id_estudiante: str,
+        practicas_por_estudiante: dict[str, list[Practica]],
+        postulaciones_por_estudiante: dict[str, list[Postulacion]],
+        postulaciones_abiertas: set[str],
+    ) -> str:
+        practicas = practicas_por_estudiante.get(id_estudiante, [])
+        if any(practica.estado == "activa" for practica in practicas):
+            return "En practica"
+        if any(practica.estado == "finalizada" for practica in practicas):
+            return "Aprobado"
+        postulaciones = postulaciones_por_estudiante.get(id_estudiante, [])
+        if any(postulacion.estado in postulaciones_abiertas for postulacion in postulaciones):
+            return "Postulando"
+        return "Sin iniciar"
+
+    def _insertar_chart_view(self, contenedor: QtWidgets.QWidget, chart: QChart):
+        self._limpiar_contenedor(contenedor)
+        layout = contenedor.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(contenedor)
+            layout.setContentsMargins(0, 0, 0, 0)
+        chart_view = QChartView(chart)
+        chart_view.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
+        layout.addWidget(chart_view)
+
+    def _insertar_mensaje_widget(self, contenedor: QtWidgets.QWidget, mensaje: str):
+        self._limpiar_contenedor(contenedor)
+        layout = contenedor.layout()
+        if layout is None:
+            layout = QtWidgets.QVBoxLayout(contenedor)
+            layout.setContentsMargins(12, 12, 12, 12)
+        label = QtWidgets.QLabel(mensaje)
+        label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        label.setWordWrap(True)
+        layout.addWidget(label)
+
+    def _limpiar_contenedor(self, contenedor: QtWidgets.QWidget):
+        layout = contenedor.layout()
+        if layout is None:
+            return
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
     def volver_inicio(self):
         self._mostrar_principal()

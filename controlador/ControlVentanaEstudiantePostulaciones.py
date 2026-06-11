@@ -30,7 +30,7 @@ class ControlVentanaEstudiantePostulaciones(QtWidgets.QWidget, Ui_FormESTPostula
         self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
     def configurar_tabla(self):
-        columnas = ["ID", "Oferta", "Titulo", "Fecha", "Estado"]
+        columnas = ["ID", "Oferta", "Titulo", "Fecha", "Estado", "Documento"]
         self.tblPostulaciones.setColumnCount(len(columnas))
         self.tblPostulaciones.setHorizontalHeaderLabels(columnas)
         self.tblPostulaciones.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -51,6 +51,7 @@ class ControlVentanaEstudiantePostulaciones(QtWidgets.QWidget, Ui_FormESTPostula
                 oferta.titulo if oferta else "Oferta no encontrada",
                 postulacion.fecha_postulacion,
                 postulacion.estado,
+                "Adjunto" if postulacion.tiene_documento_malla() else "Sin adjunto",
             ]
             for columna, valor in enumerate(valores):
                 self.tblPostulaciones.setItem(fila, columna, QtWidgets.QTableWidgetItem(str(valor)))

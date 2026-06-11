@@ -78,24 +78,24 @@ class ControlVentanaAdmin(QtWidgets.QMainWindow, Ui_MainWindowAdmin):
 
     def cargar_resumen(self):
         usuarios = self.usuarios.listar_usuarios()
-        conteos = {
-            ROLES["ESTUDIANTE"]: 0,
-            ROLES["TUTOR_ACADEMICO"]: 0,
-            ROLES["TUTOR_EMPRESARIAL"]: 0,
-            ROLES["COORDINADOR"]: 0,
-            ROLES["ADMINISTRADOR"]: 0,
+        resumen = self._generar_resumen(usuarios, Empresa.cargar_todos())
+        self.lblNumEstudiantes.setText(str(resumen["estudiantes"]))
+        self.lblNumTA.setText(str(resumen["tutores_academicos"]))
+        self.lblTE.setText(str(resumen["tutores_empresariales"]))
+        self.lblNumCoordinadores.setText(str(resumen["coordinadores"]))
+        self.lblNumAdministradores.setText(str(resumen["administradores"]))
+        self.lblNumEmpresas.setText(str(resumen["empresas"]))
+
+    def _generar_resumen(self, usuarios: list[object], empresas: list[object]) -> dict[str, int]:
+        contar_rol = lambda rol: sum(map(lambda usuario: usuario.rol == rol, usuarios))
+        return {
+            "estudiantes": contar_rol(ROLES["ESTUDIANTE"]),
+            "tutores_academicos": contar_rol(ROLES["TUTOR_ACADEMICO"]),
+            "tutores_empresariales": contar_rol(ROLES["TUTOR_EMPRESARIAL"]),
+            "coordinadores": contar_rol(ROLES["COORDINADOR"]),
+            "administradores": contar_rol(ROLES["ADMINISTRADOR"]),
+            "empresas": len(empresas),
         }
-
-        for usuario in usuarios:
-            if usuario.rol in conteos:
-                conteos[usuario.rol] += 1
-
-        self.lblNumEstudiantes.setText(str(conteos[ROLES["ESTUDIANTE"]]))
-        self.lblNumTA.setText(str(conteos[ROLES["TUTOR_ACADEMICO"]]))
-        self.lblTE.setText(str(conteos[ROLES["TUTOR_EMPRESARIAL"]]))
-        self.lblNumCoordinadores.setText(str(conteos[ROLES["COORDINADOR"]]))
-        self.lblNumAdministradores.setText(str(conteos[ROLES["ADMINISTRADOR"]]))
-        self.lblNumEmpresas.setText(str(len(Empresa.cargar_todos())))
 
     def abrir_usuarios(self):
         self.ventana_usuarios = ControlVentanaAdminUsuarios(self.usuario, self)

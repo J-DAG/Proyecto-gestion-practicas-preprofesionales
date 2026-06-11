@@ -124,25 +124,25 @@ class ControlVentanaCoordinadorTutores(QtWidgets.QWidget, Ui_frmTutores):
         if tutor is None:
             return
 
-        if not tutor.activo:
-            QtWidgets.QMessageBox.information(self, "Tutor inactivo", "El tutor seleccionado ya esta inactivo.")
-            return
-
         respuesta = QtWidgets.QMessageBox.question(
             self,
-            "Desactivar tutor",
-            f"Se desactivara la cuenta de {tutor.nombre}. Desea continuar?",
+            "Eliminar tutor",
+            (
+                f"Se eliminara permanentemente la cuenta de {tutor.nombre}.\n\n"
+                "Solo se permitira si no tiene practicas o actividades historicas "
+                "asociadas. Desea continuar?"
+            ),
         )
         if respuesta != QtWidgets.QMessageBox.StandardButton.Yes:
             return
 
         try:
-            id_reemplazo = self._pedir_tutor_reemplazo_si_aplica(tutor)
-            self.admin.activar_desactivar_cuenta(tutor.id_usuario, False, id_reemplazo)
-            QtWidgets.QMessageBox.information(self, "Tutor desactivado", "Tutor desactivado correctamente.")
+            id_reemplazo = self._pedir_tutor_reemplazo_para_eliminar_si_aplica(tutor)
+            self.admin.eliminar_usuario(tutor.id_usuario, id_reemplazo)
+            QtWidgets.QMessageBox.information(self, "Tutor eliminado", "Tutor eliminado correctamente.")
             self._refrescar_vistas()
         except SistemaPracticasError as error:
-            QtWidgets.QMessageBox.warning(self, "No se pudo desactivar", str(error))
+            QtWidgets.QMessageBox.warning(self, "No se pudo eliminar", str(error))
 
     def _tutor_seleccionado(self) -> Usuario | None:
         fila = self.tblTutores.currentRow()
@@ -173,6 +173,31 @@ class ControlVentanaCoordinadorTutores(QtWidgets.QWidget, Ui_frmTutores):
             self,
             "Tutor reemplazo",
             "Seleccione el tutor que recibira las practicas activas:",
+            opciones,
+            0,
+            False,
+        )
+        if not aceptado:
+            raise ValidacionError("Debe seleccionar un tutor reemplazo.")
+        return opcion.split(" - ", 1)[0]
+
+    def _pedir_tutor_reemplazo_para_eliminar_si_aplica(self, tutor: Usuario) -> str | None:
+        if not self.admin.tutor_requiere_reemplazo_para_eliminar(tutor.id_usuario):
+            return None
+
+        tutores = [
+            usuario
+            for usuario in self.usuarios.listar_usuarios()
+            if usuario.rol == tutor.rol and usuario.activo and usuario.id_usuario != tutor.id_usuario
+        ]
+        if not tutores:
+            raise ValidacionError("No hay tutores activos disponibles para reemplazo.")
+
+        opciones = [f"{usuario.id_usuario} - {usuario.nombre}" for usuario in tutores]
+        opcion, aceptado = QtWidgets.QInputDialog.getItem(
+            self,
+            "Tutor reemplazo",
+            "Seleccione el tutor que recibira las practicas y actividades asociadas:",
             opciones,
             0,
             False,
