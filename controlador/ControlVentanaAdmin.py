@@ -34,9 +34,7 @@ class ControlVentanaAdmin(QtWidgets.QMainWindow, Ui_MainWindowAdmin):
         self.cargar_resumen()
         self.btnCerrarSesion_1.clicked.connect(self.salir)
         self.btnCerrarSesion.triggered.connect(self.salir)
-        self.btnAdminUsuarios.clicked.connect(self.abrir_usuarios)
         self.btnUsuarios.triggered.connect(self.abrir_usuarios)
-        self.btnAdminEmpresas.clicked.connect(self.abrir_empresas)
         self.btnEmpresa.triggered.connect(self.abrir_empresas)
         self.btnAcercaDe.triggered.connect(self.acerca_de)
 

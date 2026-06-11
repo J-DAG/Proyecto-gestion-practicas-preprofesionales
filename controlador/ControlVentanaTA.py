@@ -26,12 +26,10 @@ class ControlVentanaTA(QtWidgets.QMainWindow, Ui_MainWindowTA):
         self.cargar_resumen()
         self.btnCerrarSesion_2.clicked.connect(self.salir)
         self.btnCerrarSesion.triggered.connect(self.salir)
-        self.btnVerPracticasProgreso.clicked.connect(self.practicas_en_progreso)
         self.btnEnProgreso.triggered.connect(self.practicas_en_progreso)
         self.btnVerNotificaciones.clicked.connect(self.ver_notificaciones)
         self.btnNotificaciones.triggered.connect(self.ver_notificaciones)
         self.btnCompletadas.triggered.connect(self.practicas_completas)
-        self.btnVerPracticasCompletadas.clicked.connect(self.practicas_completas)
         self.lblTitulo.setFont(EstilosClase.titulo_usurios())
         self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
 
