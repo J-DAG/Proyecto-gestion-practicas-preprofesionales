@@ -3,6 +3,7 @@ from PyQt6 import QtWidgets
 from modelo.Empresa import Empresa
 from utilidades.Excepciones import ValidacionError
 from utilidades.ManejoDatos import ManejoDatos
+from utilidades.ValidacionCedula import validar_cedula_ecuatoriana
 
 
 CARRERAS = [
@@ -52,8 +53,10 @@ def validar_basicos(nombres: str, apellidos: str, cedula: str, email: str) -> No
         raise ValidacionError("Los nombres son obligatorios.")
     if not apellidos.strip():
         raise ValidacionError("Los apellidos son obligatorios.")
-    if not cedula.strip():
-        raise ValidacionError("La cedula es obligatoria.")
+    try:
+        validar_cedula_ecuatoriana(cedula)
+    except ValueError as error:
+        raise ValidacionError(str(error)) from error
     if "@" not in email:
         raise ValidacionError("El email ingresado no tiene un formato valido.")
 
@@ -66,7 +69,12 @@ def validar_password(password: str, confirmar: str, requerido: bool) -> None:
             raise ValidacionError("Las contrasenias no coinciden.")
 
 
-def validar_unicos_edicion(id_usuario: str, email: str, cedula: str) -> None:
+def validar_unicos_edicion(id_usuario: str, email: str, cedula: str) -> str:
+    try:
+        cedula = validar_cedula_ecuatoriana(cedula)
+    except ValueError as error:
+        raise ValidacionError(str(error)) from error
+
     usuario_email = ManejoDatos("usuarios").buscar_por_campo("email", email)
     if usuario_email is not None and usuario_email.id_usuario != id_usuario:
         raise ValidacionError(f"Ya existe un usuario con email {email}.")
@@ -74,6 +82,7 @@ def validar_unicos_edicion(id_usuario: str, email: str, cedula: str) -> None:
     usuario_cedula = ManejoDatos("usuarios").buscar_por_campo("cedula", cedula)
     if usuario_cedula is not None and usuario_cedula.id_usuario != id_usuario:
         raise ValidacionError(f"Ya existe un usuario con cedula {cedula}.")
+    return cedula
 
 
 def refrescar_padre(parent: object) -> None:

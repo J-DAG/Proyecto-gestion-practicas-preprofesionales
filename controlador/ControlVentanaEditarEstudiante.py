@@ -48,14 +48,14 @@ class ControlVentanaEditarEstudiante(QtWidgets.QWidget, Ui_frmEditarCuentaEstudi
             carrera = self.cbxCarrera.currentText().strip()
             if not carrera:
                 raise ValidacionError("La carrera es obligatoria.")
-            validar_unicos_edicion(
+            cedula = validar_unicos_edicion(
                 self.usuario.id_usuario,
                 self.txtCorreoElectronico.text().strip(),
                 self.txtCedula.text().strip(),
             )
             self.usuario.nombres = self.txtNombres.text().strip()
             self.usuario.apellidos = self.txtApellidos.text().strip()
-            self.usuario.cedula = self.txtCedula.text().strip()
+            self.usuario.cedula = cedula
             self.usuario.email = self.txtCorreoElectronico.text().strip()
             self.usuario.carrera = carrera
             self.usuario.ciclo_actual = int(valor_combo(self.cbsCicloActual))

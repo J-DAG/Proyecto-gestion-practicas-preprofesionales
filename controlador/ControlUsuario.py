@@ -16,6 +16,7 @@ from modelo.Usuario import (
 from utilidades.Excepciones import AutenticacionError, EntidadDuplicadaError, ValidacionError
 from utilidades.IDgenerator import generar_id
 from utilidades.ManejoDatos import ManejoDatos
+from utilidades.ValidacionCedula import validar_cedula_ecuatoriana
 
 class ControlUsuario:
     def registrar_estudiante(
@@ -29,7 +30,7 @@ class ControlUsuario:
             ciclo_actual: int,
             matriculado: bool,
     ) -> Estudiante:
-        self._validar_datos_unicos(email, cedula)
+        cedula = self._validar_datos_unicos(email, cedula)
         estudiante = Estudiante(
             id_usuario=generar_id("EST"),
             nombres=nombres,
@@ -53,7 +54,7 @@ class ControlUsuario:
             email: str,
             password: str,
     ) -> Coordinador:
-        self._validar_datos_unicos(email, cedula)
+        cedula = self._validar_datos_unicos(email, cedula)
         coordinador = Coordinador(
             id_usuario=generar_id("COO"),
             nombres=nombres,
@@ -75,7 +76,7 @@ class ControlUsuario:
             password: str,
             carrera: str,
     ) -> TutorAcademico:
-        self._validar_datos_unicos(email, cedula)
+        cedula = self._validar_datos_unicos(email, cedula)
         tutor = TutorAcademico(
             id_usuario=generar_id("TAC"),
             nombres=nombres,
@@ -99,7 +100,7 @@ class ControlUsuario:
             id_empresa: str,
             cargo: str,
     ) -> TutorEmpresarial:
-        self._validar_datos_unicos(email, cedula)
+        cedula = self._validar_datos_unicos(email, cedula)
         Empresa.obtener_por_id(id_empresa)
         tutor = TutorEmpresarial(
             id_usuario=generar_id("TEM"),
@@ -123,7 +124,7 @@ class ControlUsuario:
             email: str,
             password: str,
     ) -> Administrador:
-        self._validar_datos_unicos(email, cedula)
+        cedula = self._validar_datos_unicos(email, cedula)
         administrador = Administrador(
             id_usuario=generar_id("ADM"),
             nombres=nombres,
@@ -138,6 +139,8 @@ class ControlUsuario:
 
     def login(self, email: str, password: str) -> Usuario:
         usuario = ManejoDatos("usuarios").buscar_por_campo("email", email)
+        if usuario is None:
+            usuario = Usuario.buscar_por_id(email)
         if usuario is None or not usuario.autenticar(password):
             raise AutenticacionError("Credenciales invalidas o cuenta inactiva.")
         return usuario
@@ -157,12 +160,15 @@ class ControlUsuario:
         usuario.guardar()
         return usuario
 
-    def _validar_datos_unicos(self, email: str, cedula: str) -> None:
+    def _validar_datos_unicos(self, email: str, cedula: str) -> str:
         if "@" not in email:
             raise ValidacionError("El email ingresado no tiene un formato valido.")
-        if not cedula.strip():
-            raise ValidacionError("La cedula es obligatoria.")
+        try:
+            cedula = validar_cedula_ecuatoriana(cedula)
+        except ValueError as error:
+            raise ValidacionError(str(error)) from error
         if ManejoDatos("usuarios").buscar_por_campo("email", email):
             raise EntidadDuplicadaError(f"Ya existe un usuario con email {email}.")
         if ManejoDatos("usuarios").buscar_por_campo("cedula", cedula):
             raise EntidadDuplicadaError(f"Ya existe un usuario con cedula {cedula}.")
+        return cedula

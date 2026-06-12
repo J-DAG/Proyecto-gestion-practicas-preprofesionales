@@ -251,7 +251,7 @@ class Ui_frmCrearOferta(object):
         self.dtFecha.setGeometry(QtCore.QRect(210, 370, 351, 181))
         self.dtFecha.setObjectName("dtFecha")
         self.sbxNumCupos = QtWidgets.QSpinBox(parent=frmCrearOferta)
-        self.sbxNumCupos.setGeometry(QtCore.QRect(490, 90, 71, 31))
+        self.sbxNumCupos.setGeometry(QtCore.QRect(490, 90, 100, 31))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         self.sbxNumCupos.setFont(font)

@@ -1,11 +1,7 @@
 from __future__ import annotations
 
-from datetime import date, timedelta
-
-from configuracion.ajustes import ARCHIVO_DATOS
-from controlador.ControlOferta import ControlOferta
-from controlador.ControlUsuario import ControlUsuario
-from modelo.Usuario import Usuario
+from configuracion.ajustes import ARCHIVO_DATOS, ROLES
+from modelo.Usuario import Administrador, Usuario
 from utilidades.ManejoDatos import ManejoDatos
 
 
@@ -17,87 +13,22 @@ def inicializar_archivos_dat() -> None:
 
 
 def sembrar_datos_prueba() -> None:
-    """Crea usuarios, empresa y oferta iniciales cuando el sistema esta vacio."""
-
     inicializar_archivos_dat()
     if Usuario.cargar_todos():
         return
 
-    usuarios = ControlUsuario()
-    ofertas = ControlOferta()
+    administrador = Administrador(
+        id_usuario="admin",
+        nombres="Administrador",
+        apellidos="General",
+        cedula="1300000005",
+        email="admin@local",
+        password="admin",
+        rol=ROLES["ADMINISTRADOR"],
+    )
+    administrador.guardar()
 
-    usuarios.registrar_administrador(
-        "Admin",
-        "General",
-        "1300000000",
-        "admin@uleam.edu.ec",
-        "admin123",
-    )
-    usuarios.registrar_coordinador(
-        "Coord",
-        "Practicas",
-        "1300000001",
-        "coord@uleam.edu.ec",
-        "coord123",
-    )
-    usuarios.registrar_tutor_academico(
-        "Tutor",
-        "Academico",
-        "1300000002",
-        "tutor.academico@uleam.edu.ec",
-        "tutor123",
-        "Software",
-    )
-    usuarios.registrar_estudiante(
-        "Ana",
-        "Estudiante",
-        "1310000001",
-        "ana@uleam.edu.ec",
-        "ana123",
-        "Software",
-        7,
-        True,
-    )
-
-    empresa = ofertas.registrar_empresa(
-        "Tech Andina",
-        "contacto@techandina.com",
-        "Tech Andina S.A.",
-        "1399999999001",
-        "Tecnologia",
-        "Manta",
-        "Crear soluciones digitales utiles.",
-        "Ser referente regional en innovacion.",
-        True,
-    )
-    usuarios.registrar_tutor_empresarial(
-        "Tutor",
-        "Empresarial",
-        "1300000003",
-        "tutor.empresarial@techandina.com",
-        "tutor123",
-        empresa.id_empresa,
-        "Lider tecnico",
-    )
-    ofertas.crear_oferta(
-        empresa.id_empresa,
-        "Practicante de desarrollo Python",
-        "Apoyo en desarrollo de sistemas internos.",
-        "Python basico, Git y buenas practicas.",
-        "Desarrollo de software",
-        3,
-        date.today() + timedelta(days=30),
-        )
-
-    # Tocar explicitamente archivos administrativos aun si no tienen datos semilla.
-    for nombre in [
-        "postulaciones",
-        "practicas",
-        "actividades",
-        "formularios",
-        "documentos",
-        "solicitudes",
-        "convenios",
-        "notificaciones",
-    ]:
+    for nombre in ARCHIVO_DATOS:
+        if nombre == "usuarios":
+            continue
         ManejoDatos(nombre).guardar({})

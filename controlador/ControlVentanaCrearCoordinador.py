@@ -1,4 +1,4 @@
-from PyQt6 import QtWidgets
+from PyQt6 import QtCore, QtWidgets
 
 from controlador.ControlUsuario import ControlUsuario
 from controlador._formularios_usuario import refrescar_padre, validar_basicos, validar_password
@@ -11,10 +11,16 @@ class ControlVentanaCrearCoordinador(QtWidgets.QWidget):
         self.parent_controller = parent
         self.usuarios = ControlUsuario()
         self.setWindowTitle("Registrar coordinador")
+        self.resize(520, 340)
+        self.setMinimumSize(QtCore.QSize(520, 340))
+        self.setMaximumSize(QtCore.QSize(520, 340))
         self._construir_formulario()
 
     def _construir_formulario(self):
         layout = QtWidgets.QFormLayout(self)
+        layout.setContentsMargins(24, 24, 24, 24)
+        layout.setHorizontalSpacing(16)
+        layout.setVerticalSpacing(12)
         self.txtNombres = QtWidgets.QLineEdit()
         self.txtApellidos = QtWidgets.QLineEdit()
         self.txtCedula = QtWidgets.QLineEdit()
@@ -34,8 +40,8 @@ class ControlVentanaCrearCoordinador(QtWidgets.QWidget):
         layout.addRow("Apellidos:", self.txtApellidos)
         layout.addRow("Cedula:", self.txtCedula)
         layout.addRow("Correo electronico:", self.txtCorreoElectronico)
-        layout.addRow("Contrasenia:", self.txtContrasenia)
-        layout.addRow("Confirmar contrasenia:", self.txtConfirmarContrasenia)
+        layout.addRow("Contraseña:", self.txtContrasenia)
+        layout.addRow("Confirmar contraseña:", self.txtConfirmarContrasenia)
         layout.addRow(botones)
 
         self.btnCancelar.clicked.connect(self.close)

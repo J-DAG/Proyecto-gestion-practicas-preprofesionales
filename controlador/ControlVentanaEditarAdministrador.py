@@ -55,14 +55,14 @@ class ControlVentanaEditarAdministrador(QtWidgets.QWidget):
                 self.txtCorreoElectronico.text(),
             )
             validar_password(self.txtContrasenia.text(), self.txtConfirmarContrasenia.text(), False)
-            validar_unicos_edicion(
+            cedula = validar_unicos_edicion(
                 self.usuario.id_usuario,
                 self.txtCorreoElectronico.text().strip(),
                 self.txtCedula.text().strip(),
             )
             self.usuario.nombres = self.txtNombres.text().strip()
             self.usuario.apellidos = self.txtApellidos.text().strip()
-            self.usuario.cedula = self.txtCedula.text().strip()
+            self.usuario.cedula = cedula
             self.usuario.email = self.txtCorreoElectronico.text().strip()
             if self.txtContrasenia.text():
                 self.usuario.password = self.usuario.encriptar_password(self.txtContrasenia.text())

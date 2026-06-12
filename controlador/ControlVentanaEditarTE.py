@@ -50,14 +50,14 @@ class ControlVentanaEditarTE(QtWidgets.QWidget, Ui_frmEditarTE):
             if not cargo:
                 raise ValidacionError("El cargo es obligatorio.")
             Empresa.obtener_por_id(id_empresa)
-            validar_unicos_edicion(
+            cedula = validar_unicos_edicion(
                 self.usuario.id_usuario,
                 self.txtCorreoElectronico.text().strip(),
                 self.txtCedula.text().strip(),
             )
             self.usuario.nombres = self.txtNombres.text().strip()
             self.usuario.apellidos = self.txtApellidos.text().strip()
-            self.usuario.cedula = self.txtCedula.text().strip()
+            self.usuario.cedula = cedula
             self.usuario.email = self.txtCorreoElectronico.text().strip()
             self.usuario.id_empresa = id_empresa
             self.usuario.cargo = cargo

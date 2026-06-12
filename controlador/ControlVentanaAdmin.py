@@ -53,8 +53,8 @@ class ControlVentanaAdmin(QtWidgets.QMainWindow, Ui_MainWindowAdmin):
         self.tblUsuarios.setEditTriggers(QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.tblUsuarios.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectionBehavior.SelectRows)
         self.tblUsuarios.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.SingleSelection)
-        self.tblUsuarios.horizontalHeader().setStretchLastSection(True)
-        self.tblUsuarios.resizeColumnsToContents()
+        self.tblUsuarios.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self.tblUsuarios.horizontalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 
     def cargar_datos(self):
         lista_usuarios = self.usuarios.listar_usuarios()
@@ -73,8 +73,6 @@ class ControlVentanaAdmin(QtWidgets.QMainWindow, Ui_MainWindowAdmin):
             for columna, valor in enumerate(valores):
                 item = QtWidgets.QTableWidgetItem(str(valor))
                 self.tblUsuarios.setItem(fila, columna, item)
-
-        self.tblUsuarios.resizeColumnsToContents()
 
     def cargar_resumen(self):
         usuarios = self.usuarios.listar_usuarios()
