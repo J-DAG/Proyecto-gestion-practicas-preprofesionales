@@ -142,7 +142,7 @@ class ControlUsuario:
         if usuario is None:
             usuario = Usuario.buscar_por_id(email)
         if usuario is None or not usuario.autenticar(password):
-            raise AutenticacionError("Credenciales invalidas o cuenta inactiva.")
+            raise AutenticacionError("Credenciales invalidas.")
         return usuario
 
     def actualizar_usuario(self, usuario: Usuario) -> None:

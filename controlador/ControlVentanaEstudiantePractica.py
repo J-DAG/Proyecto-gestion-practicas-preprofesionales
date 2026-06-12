@@ -22,9 +22,7 @@ class ControlVentanaEstudiantePractica(QtWidgets.QWidget, Ui_FormPracticaEstudia
 
     def iniciar_controlador(self):
         self.configurar_tabla()
-        self.rbtAprobadas.setAutoExclusive(False)
-        self.rbtAprobadas_2.setAutoExclusive(False)
-        self.rbtAprobadas_3.setAutoExclusive(False)
+        self.configurar_filtros_actividades()
         self.cargar_datos()
         self.btnInico.clicked.connect(self.volver_inicio)
         self.btnMiPractica.clicked.connect(self.cargar_datos)
@@ -35,11 +33,34 @@ class ControlVentanaEstudiantePractica(QtWidgets.QWidget, Ui_FormPracticaEstudia
         self.btnBuscar.clicked.connect(self.buscar_actividades)
         self.txtBuscar.returnPressed.connect(self.buscar_actividades)
         self.txtBuscar.textChanged.connect(self.buscar_actividades)
-        self.rbtAprobadas.toggled.connect(self.buscar_actividades)
-        self.rbtAprobadas_2.toggled.connect(self.buscar_actividades)
-        self.rbtAprobadas_3.toggled.connect(self.buscar_actividades)
         self.lblTitulo.setFont(EstilosClase.titulo_usurios())
         self.lblSubTitulo.setFont(EstilosClase.sub_titulo())
+
+    def configurar_filtros_actividades(self):
+        self.filtro_actividad_activo = None
+        self._filtro_presionado_activo = False
+        self.grupo_filtros_actividades = QtWidgets.QButtonGroup(self)
+        self.grupo_filtros_actividades.setExclusive(False)
+        for boton in (self.rbtAprobadas, self.rbtAprobadas_2, self.rbtAprobadas_3):
+            boton.setAutoExclusive(False)
+            self.grupo_filtros_actividades.addButton(boton)
+            boton.pressed.connect(lambda boton=boton: self._recordar_filtro_presionado(boton))
+            boton.clicked.connect(lambda checked=False, boton=boton: self._alternar_filtro_actividad(boton))
+
+    def _recordar_filtro_presionado(self, boton: QtWidgets.QRadioButton):
+        self._filtro_presionado_activo = self.filtro_actividad_activo is boton and boton.isChecked()
+
+    def _alternar_filtro_actividad(self, boton: QtWidgets.QRadioButton):
+        if self._filtro_presionado_activo:
+            boton.setChecked(False)
+            self.filtro_actividad_activo = None
+            self.buscar_actividades()
+            return
+
+        for opcion in (self.rbtAprobadas, self.rbtAprobadas_2, self.rbtAprobadas_3):
+            opcion.setChecked(opcion is boton)
+        self.filtro_actividad_activo = boton
+        self.buscar_actividades()
 
     def configurar_tabla(self):
         columnas = ["ID", "Descripcion", "Horas", "Fecha", "Aprobada", "Completada", "Estado"]

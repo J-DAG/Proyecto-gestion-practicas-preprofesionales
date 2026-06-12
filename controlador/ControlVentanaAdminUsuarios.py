@@ -127,7 +127,7 @@ class ControlVentanaAdminUsuarios(QtWidgets.QWidget, Ui_formGestionUsuarios):
         elif isinstance(usuario, Coordinador):
             subventana = ControlVentanaEditarCoordinador(usuario, self)
         else:
-            QtWidgets.QMessageBox.warning(self, "Rol no soportado", "No hay ventana de edicion para este rol.")
+            QtWidgets.QMessageBox.warning(self, "Rol no soportado", "El rol asignado no cioncide con las credenciales del sistema.")
             return
         self._abrir_subventana(subventana)
 
@@ -145,7 +145,7 @@ class ControlVentanaAdminUsuarios(QtWidgets.QWidget, Ui_formGestionUsuarios):
             return
 
         detalle = (
-            "Tambien se eliminaran sus postulaciones, practicas, actividades, "
+            "Se eliminaran sus postulaciones, practicas, actividades, "
             "formularios, documentos y solicitudes asociadas."
             if usuario.rol == ROLES["ESTUDIANTE"]
             else (

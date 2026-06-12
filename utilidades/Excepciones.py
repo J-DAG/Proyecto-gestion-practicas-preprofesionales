@@ -32,7 +32,7 @@ class ReglaNegocioError(SistemaPracticasError):
 
 class AutenticacionError(SistemaPracticasError):
     codigo = "AUTENTICACION_ERROR"
-    mensaje_default = "Credenciales invalidas o cuenta inactiva."
+    mensaje_default = "Credenciales invalidas."
 
 
 class AutorizacionError(SistemaPracticasError):

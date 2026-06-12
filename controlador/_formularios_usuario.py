@@ -7,10 +7,10 @@ from utilidades.ValidacionCedula import validar_cedula_ecuatoriana
 
 
 CARRERAS = [
-    "Software",
-    "Tecnologias de la informacion",
-    "Sistemas de informacion",
-    "Redes y telecomunicaciones",
+    "Computacion",
+    "Electricidad",
+    "Ingenieria Civil",
+    "Telecomunicaciones",
 ]
 
 
@@ -63,10 +63,10 @@ def validar_basicos(nombres: str, apellidos: str, cedula: str, email: str) -> No
 
 def validar_password(password: str, confirmar: str, requerido: bool) -> None:
     if requerido and not password.strip():
-        raise ValidacionError("La contrasenia es obligatoria.")
+        raise ValidacionError("La contraseña es obligatoria.")
     if password or confirmar:
         if password != confirmar:
-            raise ValidacionError("Las contrasenias no coinciden.")
+            raise ValidacionError("Las contraseñas no coinciden.")
 
 
 def validar_unicos_edicion(id_usuario: str, email: str, cedula: str) -> str:

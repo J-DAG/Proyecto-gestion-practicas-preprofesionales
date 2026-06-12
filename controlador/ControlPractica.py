@@ -225,8 +225,6 @@ class ControlPractica:
             practica.guardar()
 
     def validar_actividad(self, id_actividad: str, id_tutor_academico: str) -> Actividad:
-        """Alias legado: ahora validar equivale a aprobar academicamente."""
-
         return self.aprobar_actividad(id_actividad, id_tutor_academico)
 
     def finalizar_practica(self, id_practica: str, observaciones: str = "") -> Practica:
@@ -280,8 +278,6 @@ class ControlPractica:
             practica: Practica,
             empresa: Empresa,
     ) -> Documento | None:
-        """RN-16: si la empresa no tiene convenio, se genera carta compromiso."""
-
         if empresa.convenio_vigente:
             return None
 
@@ -387,8 +383,6 @@ class ControlPractica:
         return practicas[0]
 
     def obtener_progreso_estudiante(self, id_estudiante: str) -> dict[str, object]:
-        """Obtiene el progreso de la practica activa o ultima practica del estudiante."""
-
         practica = self.obtener_practica_visible_estudiante(id_estudiante)
         if practica is None:
             return {
