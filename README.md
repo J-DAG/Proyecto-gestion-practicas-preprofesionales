@@ -142,8 +142,3 @@ Los paneles de coordinador usan `PyQt6-Charts` para mostrar:
 - Practicas por estado.
 
 Si `PyQt6-Charts` no esta instalado, las ventanas muestran un mensaje informativo en lugar de cerrar el programa.
-
-## Nota sobre persistencia
-
-Los archivos `.dat` usan `pickle`, por lo que deben considerarse archivos internos de la aplicacion. No se recomienda abrir ni cargar archivos `.dat` de origen desconocido.
-
