@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets
 
 from controlador.ControlUsuario import ControlUsuario
 from controlador._formularios_usuario import llenar_combo_carreras, refrescar_padre, validar_basicos, validar_password
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.ui_crear_cuenta_TA import Ui_frmCrearCuentaTA
 
 
@@ -47,3 +47,4 @@ class ControlVentanaCrearTA(QtWidgets.QWidget, Ui_frmCrearCuentaTA):
         if hasattr(self, "txtCarrera"):
             return self.txtCarrera.text().strip()
         return self.cbxCarrera.currentText().strip()
+

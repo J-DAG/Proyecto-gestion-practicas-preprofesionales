@@ -5,8 +5,8 @@ import pickle
 from pathlib import Path
 from typing import Any, Callable, Optional, TypeVar
 
-from configuracion.ajustes import DATOS_DIR, ARCHIVO_DATOS
-from utilidades.Excepciones import (
+from modelo.configuracion.ajustes import DATOS_DIR, ARCHIVO_DATOS
+from modelo.utilidades.Excepciones import (
     ArchivoDatosCorruptoError,
     FormatoDatosInvalidoError,
     PermisoArchivoError,
@@ -148,3 +148,4 @@ class ManejoDatos:
             raise PersistenciaError(
                 f"No se pudo preparar el directorio '{self.ruta.parent}': {error}"
             ) from error
+

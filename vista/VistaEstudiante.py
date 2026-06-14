@@ -7,7 +7,7 @@ from controlador.ControlOferta import ControlOferta
 from controlador.ControlPostulacion import ControlPostulacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Usuario import Estudiante
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 from vista.ValidacionDatos import imprimir_tabla, leer_texto, pausar
 
 
@@ -161,3 +161,4 @@ class VistaEstudiante:
         except SistemaPracticasError as error:
             print(f"Error: {error}")
         pausar()
+

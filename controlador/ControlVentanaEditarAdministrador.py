@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets
 
 from controlador._formularios_usuario import refrescar_padre, validar_basicos, validar_password, validar_unicos_edicion
 from modelo.Usuario import Administrador
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 
 
 class ControlVentanaEditarAdministrador(QtWidgets.QWidget):
@@ -34,8 +34,8 @@ class ControlVentanaEditarAdministrador(QtWidgets.QWidget):
         layout.addRow("Apellidos:", self.txtApellidos)
         layout.addRow("Cedula:", self.txtCedula)
         layout.addRow("Correo electronico:", self.txtCorreoElectronico)
-        layout.addRow("Contraseña:", self.txtContrasenia)
-        layout.addRow("Confirmar contraseña:", self.txtConfirmarContrasenia)
+        layout.addRow("ContraseÃ±a:", self.txtContrasenia)
+        layout.addRow("Confirmar contraseÃ±a:", self.txtConfirmarContrasenia)
         layout.addRow(botones)
         self.btnCancelar.clicked.connect(self.close)
         self.btnGuardar.clicked.connect(self.guardar)
@@ -72,3 +72,4 @@ class ControlVentanaEditarAdministrador(QtWidgets.QWidget):
             self.close()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo actualizar", str(error))
+

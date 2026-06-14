@@ -11,7 +11,7 @@ from controlador._formularios_usuario import (
 )
 from modelo.Empresa import Empresa
 from modelo.Usuario import TutorEmpresarial
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.ui_editar_cuenta_TE import Ui_frmEditarTE
 
 
@@ -69,3 +69,4 @@ class ControlVentanaEditarTE(QtWidgets.QWidget, Ui_frmEditarTE):
             self.close()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo actualizar", str(error))
+

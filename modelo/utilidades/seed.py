@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from configuracion.ajustes import ARCHIVO_DATOS, ROLES
+from modelo.configuracion.ajustes import ARCHIVO_DATOS, ROLES
 from modelo.Usuario import Administrador, Usuario
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.ManejoDatos import ManejoDatos
 
 
 def inicializar_archivos_dat() -> None:
@@ -32,3 +32,4 @@ def sembrar_datos_prueba() -> None:
         if nombre == "usuarios":
             continue
         ManejoDatos(nombre).guardar({})
+

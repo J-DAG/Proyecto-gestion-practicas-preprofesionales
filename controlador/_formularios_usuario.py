@@ -1,9 +1,9 @@
 from PyQt6 import QtWidgets
 
 from modelo.Empresa import Empresa
-from utilidades.Excepciones import ValidacionError
-from utilidades.ManejoDatos import ManejoDatos
-from utilidades.ValidacionCedula import validar_cedula_ecuatoriana
+from modelo.utilidades.Excepciones import ValidacionError
+from modelo.utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.ValidacionCedula import validar_cedula_ecuatoriana
 
 
 CARRERAS = [
@@ -63,10 +63,10 @@ def validar_basicos(nombres: str, apellidos: str, cedula: str, email: str) -> No
 
 def validar_password(password: str, confirmar: str, requerido: bool) -> None:
     if requerido and not password.strip():
-        raise ValidacionError("La contraseña es obligatoria.")
+        raise ValidacionError("La contraseÃ±a es obligatoria.")
     if password or confirmar:
         if password != confirmar:
-            raise ValidacionError("Las contraseñas no coinciden.")
+            raise ValidacionError("Las contraseÃ±as no coinciden.")
 
 
 def validar_unicos_edicion(id_usuario: str, email: str, cedula: str) -> str:
@@ -92,3 +92,4 @@ def refrescar_padre(parent: object) -> None:
         parent._refrescar_vistas()
     elif hasattr(parent, "cargar_datos"):
         parent.cargar_datos()
+

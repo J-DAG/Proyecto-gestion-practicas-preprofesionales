@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets
 
-from configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
+from modelo.configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Practica import Practica
@@ -152,3 +152,4 @@ class ControlVentanaTAPracticasProgreso(QtWidgets.QWidget, Ui_FormTAPracticasPro
             self.ventana_ta.show()
             self.ventana_ta.raise_()
             self.ventana_ta.activateWindow()
+

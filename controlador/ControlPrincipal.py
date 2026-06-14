@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from controlador.ControlUsuario import ControlUsuario
 from controlador.ControlVentanaAdmin import ControlVentanaAdmin
 from controlador.ControlVentanaCoordinador import ControlVentanaCoordinador
@@ -8,7 +8,7 @@ from controlador.ControlVentanaEstudiante import ControlVentanaEstudiante
 from controlador.ControlVentanaTA import ControlVentanaTA
 from controlador.ControlVentanaTE import ControlVentanaTE
 from modelo.Usuario import Administrador, Coordinador, Estudiante, TutorAcademico, TutorEmpresarial
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 from vista.estilos import EstilosClase
 from vista.ui_inicio_sesion import Ui_frmInicioSesion
 
@@ -63,3 +63,4 @@ class ControlPrincipal(QtWidgets.QWidget,Ui_frmInicioSesion,
             "Crear cuenta",
             "El registro de usuarios se gestiona desde el administrador.",
         )
+

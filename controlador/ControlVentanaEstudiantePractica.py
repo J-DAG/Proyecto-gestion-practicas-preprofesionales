@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets
 
-from configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
+from modelo.configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Practica import Actividad
@@ -169,3 +169,4 @@ class ControlVentanaEstudiantePractica(QtWidgets.QWidget, Ui_FormPracticaEstudia
             self.ventana_estudiante.show()
             self.ventana_estudiante.raise_()
             self.ventana_estudiante.activateWindow()
+

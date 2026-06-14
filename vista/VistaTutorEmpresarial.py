@@ -6,7 +6,7 @@ from controlador.ControlNotificacion import ControlNotificacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Usuario import TutorEmpresarial, Usuario
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 from vista.ValidacionDatos import leer_bool, leer_entero, leer_texto, pausar
 
 
@@ -204,3 +204,4 @@ class VistaTutorEmpresarial:
                 )
         if not hay_actividades:
             print("No hay actividades registradas en sus practicas.")
+

@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtWidgets
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from controlador.ControlAdministrador import ControlAdministrador
 from controlador.ControlUsuario import ControlUsuario
 from controlador.ControlVentanaCrearTA import ControlVentanaCrearTA
@@ -8,7 +8,7 @@ from controlador.ControlVentanaCrearTE import ControlVentanaCrearTE
 from controlador.ControlVentanaEditarTA import ControlVentanaEditarTA
 from controlador.ControlVentanaEditarTE import ControlVentanaEditarTE
 from modelo.Usuario import Coordinador, TutorAcademico, TutorEmpresarial, Usuario
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.estilos import EstilosClase
 from vista.ui_coordinador_tutores import Ui_frmTutores
 
@@ -278,3 +278,4 @@ class ControlVentanaCoordinadorTutores(QtWidgets.QWidget, Ui_frmTutores):
             self.ventana_coordinador.show()
             self.ventana_coordinador.raise_()
             self.ventana_coordinador.activateWindow()
+

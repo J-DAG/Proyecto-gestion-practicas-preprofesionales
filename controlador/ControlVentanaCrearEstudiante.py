@@ -9,7 +9,7 @@ from controlador._formularios_usuario import (
     validar_password,
     valor_combo,
 )
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.ui_crear_cuenta_estudiante import Ui_frmCrearCuentaEstudiante
 
 
@@ -53,3 +53,4 @@ class ControlVentanaCrearEstudiante(QtWidgets.QWidget, Ui_frmCrearCuentaEstudian
             self.close()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo crear", str(error))
+

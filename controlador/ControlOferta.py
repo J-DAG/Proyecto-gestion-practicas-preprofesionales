@@ -4,9 +4,9 @@ from datetime import date
 
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
-from utilidades.Excepciones import EntidadDuplicadaError, ReglaNegocioError, ValidacionError
-from utilidades.IDgenerator import generar_id
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import EntidadDuplicadaError, ReglaNegocioError, ValidacionError
+from modelo.utilidades.IDgenerator import generar_id
+from modelo.utilidades.ManejoDatos import ManejoDatos
 
 
 class ControlOferta:
@@ -97,3 +97,4 @@ class ControlOferta:
         oferta.estado = "cerrada"
         oferta.guardar()
         return oferta
+

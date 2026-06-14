@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from configuracion.ajustes import HORAS_MAXIMAS_PRACTICA, ROLES
+from modelo.configuracion.ajustes import HORAS_MAXIMAS_PRACTICA, ROLES
 from controlador.ControlNotificacion import ControlNotificacion
 from modelo.Documentos import Documento, Formulario
 from modelo.Empresa import Empresa
@@ -12,9 +12,9 @@ from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Practica import Actividad, Practica
 from modelo.Usuario import Estudiante, Usuario
-from utilidades.Excepciones import AutorizacionError, ReglaNegocioError, ValidacionError
-from utilidades.IDgenerator import generar_id
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import AutorizacionError, ReglaNegocioError, ValidacionError
+from modelo.utilidades.IDgenerator import generar_id
+from modelo.utilidades.ManejoDatos import ManejoDatos
 
 
 class ControlPractica:
@@ -717,3 +717,4 @@ class ControlPractica:
             raise ReglaNegocioError("El tutor empresarial asignado debe estar activo.")
         if getattr(tutor, "id_empresa", "") != id_empresa:
             raise ReglaNegocioError("El tutor empresarial debe pertenecer a la misma empresa de la oferta.")
+

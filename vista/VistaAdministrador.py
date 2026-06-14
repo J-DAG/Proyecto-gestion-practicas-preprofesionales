@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from controlador.ControlAdministrador import ControlAdministrador
 from controlador.ControlOferta import ControlOferta
 from controlador.ControlUsuario import ControlUsuario
 from modelo.Usuario import Administrador
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 from vista.ValidacionDatos import imprimir_tabla, leer_bool, leer_entero, leer_texto, pausar
 
 
@@ -208,3 +208,4 @@ class VistaAdministrador:
             print("No hay tutores activos disponibles para reemplazo.")
         for tutor in tutores:
             print(f"- {tutor.id_usuario} | {tutor.nombre} | {tutor.email}")
+

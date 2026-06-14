@@ -8,7 +8,7 @@ from pathlib import Path
 from PyQt6 import QtWidgets
 
 from controlador.ControlPrincipal import ControlPrincipal
-from utilidades.seed import sembrar_datos_prueba
+from modelo.utilidades.seed import sembrar_datos_prueba
 
 
 CRASH_LOG_HANDLE = None
@@ -50,3 +50,4 @@ def activar_registro_fallos() -> None:
 
 if __name__ == "__main__":
     main()
+

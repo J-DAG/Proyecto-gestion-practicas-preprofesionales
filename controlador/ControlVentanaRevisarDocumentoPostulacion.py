@@ -1,14 +1,14 @@
 from pathlib import Path
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from controlador.ControlPostulacion import ControlPostulacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Usuario
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 
 
 class ControlVentanaRevisarDocumentoPostulacion(QtWidgets.QWidget):
@@ -163,3 +163,4 @@ class ControlVentanaRevisarDocumentoPostulacion(QtWidgets.QWidget):
     def _refrescar_padre(self):
         if self.parent_controller is not None and hasattr(self.parent_controller, "_refrescar_vistas"):
             self.parent_controller._refrescar_vistas()
+

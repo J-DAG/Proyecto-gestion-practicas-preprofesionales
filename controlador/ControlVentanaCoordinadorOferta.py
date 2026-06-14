@@ -5,8 +5,8 @@ from controlador.ControlVentanaEditarOferta import ControlVentanaEditarOferta
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Coordinador
-from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
+from modelo.utilidades.ManejoDatos import ManejoDatos
 from vista.estilos import EstilosClase
 from vista.ui_coordinador_ofertas import Ui_frmOfertas
 
@@ -213,3 +213,4 @@ class ControlVentanaCoordinadorOferta(QtWidgets.QWidget, Ui_frmOfertas):
             self.ventana_coordinador.show()
             self.ventana_coordinador.raise_()
             self.ventana_coordinador.activateWindow()
+

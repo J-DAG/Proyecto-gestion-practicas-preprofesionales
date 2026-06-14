@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from controlador.ControlAdministrador import ControlAdministrador
 from controlador.ControlVentanaAdminEmpresas import ControlVentanaAdminEmpresas
 from controlador.ControlVentanaAdminUsuarios import ControlVentanaAdminUsuarios
@@ -116,3 +116,4 @@ class ControlVentanaAdmin(QtWidgets.QMainWindow, Ui_MainWindowAdmin):
             "Acerca de",
             "Sistema de Gestion de practicas, panel de administrador",
         )
+

@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets
 
-from configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
+from modelo.configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Usuario import TutorEmpresarial, Usuario
@@ -102,3 +102,4 @@ class ControlVentanaTE(QtWidgets.QMainWindow, Ui_MainWindowTE):
         self.close()
         if self.login is not None:
             self.login.volver_a_login()
+

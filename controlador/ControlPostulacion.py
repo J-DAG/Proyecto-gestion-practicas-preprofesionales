@@ -4,15 +4,15 @@ import shutil
 from datetime import date
 from pathlib import Path
 
-from configuracion.ajustes import DATOS_DIR, ROLES
+from modelo.configuracion.ajustes import DATOS_DIR, ROLES
 from controlador.ControlNotificacion import ControlNotificacion
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Estudiante, Usuario
-from utilidades.Excepciones import AutorizacionError, EntidadDuplicadaError, ReglaNegocioError, ValidacionError
-from utilidades.IDgenerator import generar_id
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import AutorizacionError, EntidadDuplicadaError, ReglaNegocioError, ValidacionError
+from modelo.utilidades.IDgenerator import generar_id
+from modelo.utilidades.ManejoDatos import ManejoDatos
 
 
 class ControlPostulacion:
@@ -186,3 +186,4 @@ class ControlPostulacion:
         if not isinstance(usuario, Estudiante):
             raise ReglaNegocioError("El usuario indicado no es estudiante.")
         return usuario
+

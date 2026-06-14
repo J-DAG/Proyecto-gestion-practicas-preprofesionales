@@ -4,8 +4,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, ClassVar, Optional, TypeVar
 
-from utilidades.Excepciones import EntidadNoEncontradaError
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import EntidadNoEncontradaError
+from modelo.utilidades.ManejoDatos import ManejoDatos
 
 
 T = TypeVar("T", bound="BasePersistente")
@@ -40,3 +40,4 @@ class BasePersistente:
 
     def obtener_campo(self, campo: str) -> Any:
         return getattr(self, campo)
+

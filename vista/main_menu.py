@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from controlador.ControlUsuario import ControlUsuario
 from modelo.Usuario import (
     Administrador,
@@ -11,7 +11,7 @@ from modelo.Usuario import (
     TutorAcademico,
     TutorEmpresarial,
 )
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 from vista.VistaAdministrador import VistaAdministrador
 from vista.VistaCoordinador import VistaCoordinador
 from vista.VistaEstudiante import VistaEstudiante
@@ -65,3 +65,4 @@ class MainMenu:
         except SistemaPracticasError as error:
             print(f"Error: {error}")
             pausar()
+

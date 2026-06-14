@@ -3,7 +3,7 @@ from PyQt6 import QtWidgets
 from controlador.ControlNotificacion import ControlNotificacion
 from modelo.Notificacion import Notificacion
 from modelo.Usuario import Usuario
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 
 
 class ControlVentanaNotificaciones(QtWidgets.QWidget):
@@ -136,3 +136,4 @@ class ControlVentanaNotificaciones(QtWidgets.QWidget):
         if hasattr(fecha, "strftime"):
             return fecha.strftime("%Y-%m-%d %H:%M")
         return fecha
+

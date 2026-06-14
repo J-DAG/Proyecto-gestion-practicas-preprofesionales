@@ -8,8 +8,8 @@ from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Estudiante
-from utilidades.Excepciones import SistemaPracticasError
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.ManejoDatos import ManejoDatos
 from vista.estilos import EstilosClase
 from vista.ui_EST_ofertas_laborales import Ui_FormESTOfertasLaborales
 
@@ -203,3 +203,4 @@ class ControlVentanaEstudianteOfertasLaborales(QtWidgets.QWidget, Ui_FormESTOfer
             self.ventana_estudiante.show()
             self.ventana_estudiante.raise_()
             self.ventana_estudiante.activateWindow()
+

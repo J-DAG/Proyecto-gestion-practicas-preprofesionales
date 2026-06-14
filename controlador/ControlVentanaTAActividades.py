@@ -3,7 +3,7 @@ from PyQt6 import QtWidgets
 from controlador.ControlPractica import ControlPractica
 from modelo.Practica import Actividad, Practica
 from modelo.Usuario import TutorAcademico, Usuario
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 from vista.ui_TA__actividades import Ui_frmTAListaActividades
 
 
@@ -142,3 +142,4 @@ class ControlVentanaTAActividades(QtWidgets.QWidget, Ui_frmTAListaActividades):
         self.cargar_datos()
         if self.ventana_anterior is not None:
             self.ventana_anterior.cargar_datos()
+

@@ -6,8 +6,8 @@ from datetime import datetime
 
 from modelo.Notificacion import Notificacion
 from modelo.Usuario import Usuario
-from utilidades.IDgenerator import generar_id
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.IDgenerator import generar_id
+from modelo.utilidades.ManejoDatos import ManejoDatos
 
 
 class ControlNotificacion:
@@ -41,3 +41,4 @@ class ControlNotificacion:
         notificacion.marcar_como_leida()
         notificacion.guardar()
         return notificacion
+

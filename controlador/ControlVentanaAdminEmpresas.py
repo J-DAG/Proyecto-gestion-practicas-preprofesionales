@@ -7,8 +7,8 @@ from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Practica import Practica
 from modelo.Usuario import Administrador, TutorEmpresarial, Usuario
-from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
+from modelo.utilidades.ManejoDatos import ManejoDatos
 from vista.estilos import EstilosClase
 from vista.ui_admin_empresa_widget import Ui_formGestionEmpresas
 
@@ -202,3 +202,4 @@ class ControlVentanaAdminEmpresas(QtWidgets.QWidget, Ui_formGestionEmpresas):
         self.ventana_admin.show()
         self.ventana_admin.raise_()
         self.ventana_admin.activateWindow()
+

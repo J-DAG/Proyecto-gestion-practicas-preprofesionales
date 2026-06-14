@@ -12,7 +12,7 @@ from controlador._formularios_usuario import (
     valor_combo,
 )
 from modelo.Usuario import Estudiante
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.ui_editar_cuenta_estudiante import Ui_frmEditarCuentaEstudiante
 
 
@@ -67,3 +67,4 @@ class ControlVentanaEditarEstudiante(QtWidgets.QWidget, Ui_frmEditarCuentaEstudi
             self.close()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo actualizar", str(error))
+

@@ -7,7 +7,7 @@ except ImportError:
     QChartView = None
     QPieSeries = None
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from modelo.Postulacion import Postulacion
 from modelo.Practica import Practica
 from modelo.Usuario import Coordinador, Usuario
@@ -264,3 +264,4 @@ class ControlVentanaCoordinadorEstudiantes(QtWidgets.QWidget, Ui_frmEstudiantes)
             self.ventana_coordinador.show()
             self.ventana_coordinador.raise_()
             self.ventana_coordinador.activateWindow()
+

@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
@@ -174,3 +174,4 @@ class ControlVentanaCoordinador(QtWidgets.QMainWindow, Ui_MainWindowCoordinador)
         self.close()
         if self.login is not None:
             self.login.volver_a_login()
+

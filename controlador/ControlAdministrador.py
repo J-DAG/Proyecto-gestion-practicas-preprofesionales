@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import date
 from pathlib import Path
 
-from configuracion.ajustes import DATOS_DIR, ROLES
+from modelo.configuracion.ajustes import DATOS_DIR, ROLES
 from controlador.ControlNotificacion import ControlNotificacion
 from modelo.Documentos import Documento, Formulario, SolicitudAutorizacion
 from modelo.Empresa import Empresa
@@ -12,8 +12,8 @@ from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Practica import Actividad, Practica
 from modelo.Usuario import Usuario
-from utilidades.Excepciones import ReglaNegocioError, ValidacionError
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import ReglaNegocioError, ValidacionError
+from modelo.utilidades.ManejoDatos import ManejoDatos
 
 
 class ControlAdministrador:
@@ -467,3 +467,4 @@ class ControlAdministrador:
             "convenios",
         ]
         return {archivo: len(ManejoDatos(archivo).cargar()) for archivo in archivos}
+

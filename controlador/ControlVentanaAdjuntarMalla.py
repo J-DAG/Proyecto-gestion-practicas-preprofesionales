@@ -3,7 +3,7 @@ from PyQt6 import QtWidgets
 from controlador.ControlPostulacion import ControlPostulacion
 from modelo.Oferta import Oferta
 from modelo.Usuario import Estudiante
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 
 
 class ControlVentanaAdjuntarMalla(QtWidgets.QWidget):
@@ -83,3 +83,4 @@ class ControlVentanaAdjuntarMalla(QtWidgets.QWidget):
     def _refrescar_padre(self):
         if self.parent_controller is not None and hasattr(self.parent_controller, "_refrescar_vistas"):
             self.parent_controller._refrescar_vistas()
+

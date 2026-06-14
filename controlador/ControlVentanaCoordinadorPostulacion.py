@@ -4,7 +4,7 @@ from controlador.ControlPostulacion import ControlPostulacion
 from modelo.Oferta import Oferta
 from modelo.Postulacion import Postulacion
 from modelo.Usuario import Coordinador, Usuario
-from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
+from modelo.utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
 from vista.estilos import EstilosClase
 from vista.ui_coordinador_postulaciones import Ui_frmPostulaciones
 
@@ -204,3 +204,4 @@ class ControlVentanaCoordinadorPostulacion(QtWidgets.QWidget, Ui_frmPostulacione
             self.ventana_coordinador.show()
             self.ventana_coordinador.raise_()
             self.ventana_coordinador.activateWindow()
+

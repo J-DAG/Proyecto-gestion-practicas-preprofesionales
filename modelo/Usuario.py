@@ -4,7 +4,7 @@ import hashlib
 from dataclasses import dataclass
 from typing import ClassVar
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from modelo.BasePersistente import BasePersistente
 
 
@@ -112,3 +112,4 @@ class Administrador(Usuario):
     def __post_init__(self) -> None:
         self.rol = ROLES["ADMINISTRADOR"]
         super().__post_init__()
+

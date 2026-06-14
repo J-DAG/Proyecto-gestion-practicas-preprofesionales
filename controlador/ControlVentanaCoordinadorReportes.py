@@ -19,7 +19,7 @@ except ImportError:
     QPieSeries = None
     QValueAxis = None
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from modelo.Empresa import Empresa
 from modelo.Postulacion import Postulacion
 from modelo.Practica import Practica
@@ -350,3 +350,4 @@ class ControlVentanaCoordinadorReportes(QtWidgets.QWidget, Ui_frmReportes):
             self.ventana_coordinador.show()
             self.ventana_coordinador.raise_()
             self.ventana_coordinador.activateWindow()
+

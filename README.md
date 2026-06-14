@@ -1,4 +1,4 @@
-# Sistema de Gestion de Practicas Preprofesionales
+﻿# Sistema de Gestion de Practicas Preprofesionales
 
 Aplicacion de escritorio en Python y PyQt6 para gestionar practicas preprofesionales. El sistema mantiene una arquitectura por capas con controladores, modelos persistentes y vistas generadas desde Qt Designer.
 
@@ -27,7 +27,7 @@ Al iniciar, el sistema prepara las carpetas de recursos `iconos/` e `imagenes/` 
 
 ## Usuario semilla
 
-El sistema solo siembra un usuario administrador inicial cuando `datos/usuarios.dat` esta vacio.
+El sistema solo inicia un usuario administrador inicial cuando `datos/usuarios.dat` esta vacio.
 
 Credenciales de ingreso:
 
@@ -72,24 +72,24 @@ Si se desea reiniciar completamente la aplicacion para pruebas, se puede vaciar 
 ## Estructura del proyecto
 
 ```text
-configuracion/
+modelo/configuracion/
 controlador/
 datos/
 iconos/
 imagenes/
 modelo/
-utilidades/
+modelo/utilidades/
 vista/
 main.py
 requirements.txt
 README.md
 ```
 
-- `configuracion/`: constantes globales, roles, rutas y horas maximas.
+- `modelo/configuracion/`: constantes globales, roles, rutas y horas maximas.
 - `modelo/`: entidades persistentes como usuarios, empresas, ofertas, postulaciones, practicas, actividades, documentos y notificaciones.
 - `controlador/`: reglas de negocio y controladores de ventanas.
 - `vista/`: archivos `ui_*.py` generados por PyQt6.
-- `utilidades/`: persistencia, excepciones, generacion de IDs, semilla y validaciones.
+- `modelo/utilidades/`: persistencia, excepciones, generacion de IDs, semilla y validaciones.
 - `datos/`: almacenamiento local de la aplicacion.
 
 ## Roles del sistema
@@ -102,16 +102,6 @@ README.md
 
 Todos los usuarios tienen nombres, apellidos, cedula, email, contrasenia, rol y estado activo.
 
-## Validacion de cedula
-
-La cedula se valida bajo directrices de Ecuador:
-
-- Debe tener 10 digitos.
-- La provincia debe estar entre `01` y `24`.
-- El tercer digito debe corresponder a persona natural.
-- El ultimo digito se verifica con el algoritmo oficial de coeficientes `2,1,2,1,2,1,2,1,2`.
-
-La implementacion esta en `utilidades/ValidacionCedula.py` y usa programacion funcional con `filter`, `map`, `zip`, lambdas y `sum` para limpiar, transformar y calcular el digito verificador.
 
 ## Flujo principal
 
@@ -156,3 +146,4 @@ Si `PyQt6-Charts` no esta instalado, las ventanas muestran un mensaje informativ
 ## Nota sobre persistencia
 
 Los archivos `.dat` usan `pickle`, por lo que deben considerarse archivos internos de la aplicacion. No se recomienda abrir ni cargar archivos `.dat` de origen desconocido.
+

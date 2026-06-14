@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets
 
 from controlador.ControlUsuario import ControlUsuario
 from controlador._formularios_usuario import llenar_combo_empresas, refrescar_padre, validar_basicos, validar_password, valor_combo
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.ui_crear_cuenta_TE import Ui_frmCrearCuentaTA
 
 
@@ -45,3 +45,4 @@ class ControlVentanaCrearTE(QtWidgets.QWidget, Ui_frmCrearCuentaTA):
             self.close()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo crear", str(error))
+

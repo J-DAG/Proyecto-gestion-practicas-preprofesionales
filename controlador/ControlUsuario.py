@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from modelo.Empresa import Empresa
 from modelo.Usuario import (
     Administrador,
@@ -13,10 +13,10 @@ from modelo.Usuario import (
     TutorEmpresarial,
     Usuario,
 )
-from utilidades.Excepciones import AutenticacionError, EntidadDuplicadaError, ValidacionError
-from utilidades.IDgenerator import generar_id
-from utilidades.ManejoDatos import ManejoDatos
-from utilidades.ValidacionCedula import validar_cedula_ecuatoriana
+from modelo.utilidades.Excepciones import AutenticacionError, EntidadDuplicadaError, ValidacionError
+from modelo.utilidades.IDgenerator import generar_id
+from modelo.utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.ValidacionCedula import validar_cedula_ecuatoriana
 
 class ControlUsuario:
     def registrar_estudiante(
@@ -172,3 +172,4 @@ class ControlUsuario:
         if ManejoDatos("usuarios").buscar_por_campo("cedula", cedula):
             raise EntidadDuplicadaError(f"Ya existe un usuario con cedula {cedula}.")
         return cedula
+

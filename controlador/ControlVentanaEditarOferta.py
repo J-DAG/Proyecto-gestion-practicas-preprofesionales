@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.ui_editar_oferta import Ui_frmEditarOferta
 
 
@@ -62,3 +62,4 @@ class ControlVentanaEditarOferta(QtWidgets.QWidget, Ui_frmEditarOferta):
     def _refrescar_padre(self):
         if self.parent_controller is not None and hasattr(self.parent_controller, "_refrescar_vistas"):
             self.parent_controller._refrescar_vistas()
+

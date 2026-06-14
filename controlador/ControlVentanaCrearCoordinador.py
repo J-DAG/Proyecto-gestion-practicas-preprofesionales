@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtWidgets
 
 from controlador.ControlUsuario import ControlUsuario
 from controlador._formularios_usuario import refrescar_padre, validar_basicos, validar_password
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 
 
 class ControlVentanaCrearCoordinador(QtWidgets.QWidget):
@@ -40,8 +40,8 @@ class ControlVentanaCrearCoordinador(QtWidgets.QWidget):
         layout.addRow("Apellidos:", self.txtApellidos)
         layout.addRow("Cedula:", self.txtCedula)
         layout.addRow("Correo electronico:", self.txtCorreoElectronico)
-        layout.addRow("Contraseña:", self.txtContrasenia)
-        layout.addRow("Confirmar contraseña:", self.txtConfirmarContrasenia)
+        layout.addRow("ContraseÃ±a:", self.txtContrasenia)
+        layout.addRow("Confirmar contraseÃ±a:", self.txtConfirmarContrasenia)
         layout.addRow(botones)
 
         self.btnCancelar.clicked.connect(self.close)
@@ -68,3 +68,4 @@ class ControlVentanaCrearCoordinador(QtWidgets.QWidget):
             self.close()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo crear", str(error))
+

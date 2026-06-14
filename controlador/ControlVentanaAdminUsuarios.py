@@ -1,6 +1,6 @@
 from PyQt6 import QtCore, QtWidgets
 
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from controlador.ControlAdministrador import ControlAdministrador
 from controlador.ControlUsuario import ControlUsuario
 from controlador.ControlVentanaCrearAdministrador import ControlVentanaCrearAdministrador
@@ -14,7 +14,7 @@ from controlador.ControlVentanaEditarEstudiante import ControlVentanaEditarEstud
 from controlador.ControlVentanaEditarTA import ControlVentanaEditarTA
 from controlador.ControlVentanaEditarTE import ControlVentanaEditarTE
 from modelo.Usuario import Administrador, Coordinador, Estudiante, TutorAcademico, TutorEmpresarial, Usuario
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.estilos import EstilosClase
 from vista.ui_admin_usuario_widget import Ui_formGestionUsuarios
 
@@ -304,3 +304,4 @@ class ControlVentanaAdminUsuarios(QtWidgets.QWidget, Ui_formGestionUsuarios):
         self.ventana_admin.show()
         self.ventana_admin.raise_()
         self.ventana_admin.activateWindow()
+

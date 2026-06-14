@@ -1,11 +1,11 @@
 from PyQt6 import QtWidgets
 
-from configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
+from modelo.configuracion.ajustes import HORAS_MAXIMAS_PRACTICA
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Practica import Practica
 from modelo.Usuario import TutorAcademico, Usuario
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 from vista.estilos import EstilosClase
 from vista.ui_TA_practicas_completadas import Ui_FormTAPracticasCompletadas
 
@@ -175,3 +175,4 @@ class ControlVentanaTAPracticasCompletas(QtWidgets.QWidget, Ui_FormTAPracticasCo
             self.ventana_ta.show()
             self.ventana_ta.raise_()
             self.ventana_ta.activateWindow()
+

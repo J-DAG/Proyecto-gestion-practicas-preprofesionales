@@ -3,7 +3,7 @@ from PyQt6 import QtCore, QtWidgets
 from controlador.ControlPractica import ControlPractica
 from modelo.Practica import Actividad, Practica
 from modelo.Usuario import TutorEmpresarial, Usuario
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 from vista.ui_TE__actividades import Ui_FormTEListaActividades
 
 
@@ -273,3 +273,4 @@ class ControlVentanaEditarActividadTE(QtWidgets.QWidget):
     def _refrescar_padre(self):
         if self.parent_controller is not None and hasattr(self.parent_controller, "_refrescar_vistas"):
             self.parent_controller._refrescar_vistas()
+

@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets
 
 from controlador.ControlOferta import ControlOferta
-from utilidades.Excepciones import SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import SistemaPracticasError, ValidacionError
 
 
 from vista.ui_crear_empresa import Ui_frmCrearEmpresa
@@ -52,3 +52,4 @@ class ControlVentanaCrearEmpresa(QtWidgets.QWidget, Ui_frmCrearEmpresa):
     def _refrescar_padre(self):
         if self.parent_controller is not None and hasattr(self.parent_controller, "_refrescar_vistas"):
             self.parent_controller._refrescar_vistas()
+

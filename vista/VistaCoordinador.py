@@ -7,9 +7,9 @@ from controlador.ControlPostulacion import ControlPostulacion
 from controlador.ControlPractica import ControlPractica
 from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
-from configuracion.ajustes import ROLES
+from modelo.configuracion.ajustes import ROLES
 from modelo.Usuario import Coordinador, Estudiante, Usuario
-from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError, ValidacionError
+from modelo.utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError, ValidacionError
 from vista.ValidacionDatos import (
     imprimir_tabla,
     leer_bool,
@@ -333,3 +333,4 @@ class VistaCoordinador:
         except SistemaPracticasError as error:
             print(f"Error: {error}")
         pausar()
+

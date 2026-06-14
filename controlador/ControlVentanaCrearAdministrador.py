@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets
 
 from controlador.ControlUsuario import ControlUsuario
 from controlador._formularios_usuario import refrescar_padre, validar_basicos, validar_password
-from utilidades.Excepciones import SistemaPracticasError
+from modelo.utilidades.Excepciones import SistemaPracticasError
 
 
 class ControlVentanaCrearAdministrador(QtWidgets.QWidget):
@@ -59,3 +59,4 @@ class ControlVentanaCrearAdministrador(QtWidgets.QWidget):
             self.close()
         except SistemaPracticasError as error:
             QtWidgets.QMessageBox.warning(self, "No se pudo crear", str(error))
+

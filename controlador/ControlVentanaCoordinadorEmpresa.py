@@ -6,8 +6,8 @@ from modelo.Empresa import Empresa
 from modelo.Oferta import Oferta
 from modelo.Practica import Practica
 from modelo.Usuario import Coordinador, TutorEmpresarial, Usuario
-from utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
-from utilidades.ManejoDatos import ManejoDatos
+from modelo.utilidades.Excepciones import ReglaNegocioError, SistemaPracticasError
+from modelo.utilidades.ManejoDatos import ManejoDatos
 from vista.estilos import EstilosClase
 from vista.ui_coordinador_empresa import Ui_frmAdministracionEmpresas
 
@@ -217,3 +217,4 @@ class ControlVentanaCoordinadorEmpresa(QtWidgets.QWidget, Ui_frmAdministracionEm
             self.ventana_coordinador.show()
             self.ventana_coordinador.raise_()
             self.ventana_coordinador.activateWindow()
+
