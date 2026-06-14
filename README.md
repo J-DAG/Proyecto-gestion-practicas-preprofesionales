@@ -7,7 +7,7 @@ Aplicacion de escritorio en Python y PyQt6 para gestionar practicas preprofesion
 Instalar las dependencias desde la raiz del proyecto:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requerimientos.txt
 ```
 
 Paquetes principales:
@@ -25,7 +25,7 @@ python main.py
 
 Al iniciar, el sistema prepara las carpetas de recursos `iconos/` e `imagenes/` y crea los archivos de datos necesarios si no existen.
 
-## Usuario semilla
+## Usuario inical
 
 El sistema solo inicia un usuario administrador inicial cuando `datos/usuarios.dat` esta vacio.
 
@@ -81,7 +81,7 @@ modelo/
 modelo/utilidades/
 vista/
 main.py
-requirements.txt
+requerimientos.txt
 README.md
 ```
 
